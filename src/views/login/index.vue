@@ -53,17 +53,24 @@
 </template>
 
 <script>
+import {validEmail} from '@/utils/validate'
 export default {
   name: 'login',
   data(){
+    // 自定义校验函数
+    const validateEmail = function(rule,value,callback){
+      validEmail(value) ? callback() :callback(new Error('邮箱格式不正确'))
+    }
     return{
       loginForm:{
-        userName:'user1234',
+        userName:'admin@qq.com',
         passWord:'123456',
         imgCode:'0000',
       },
       rules:{
-        userName:[{required:true,message:'用户名不能为空',trigger:'blur'}],
+        userName:[{required:true,message:'用户名不能为空',trigger:'blur'},
+        {required:true,trigger:'blur',validator: validateEmail}
+        ],
         passWord:[{required:true,message:'密码不能为空',trigger:'blur'},
         {min: 6, max: 16, message: '密码的长度在6-16位之间 ', trigger: 'blur'}
         ],
@@ -98,6 +105,7 @@ export default {
             this.loading = true
             // 执行user/login 的方法
             // await this['user/login'](this.loginForm)
+            this.$message.success('登录成功')
             this.$router.push('/')
           }catch(error){
             console.log('login',error)

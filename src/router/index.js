@@ -13,11 +13,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/login1',
-    component: () => import('@/views/login/login1'),
-    hidden: true
-  },
-  {
     path: '/register',
     component: () => import('@/views/register/index'),
     hidden: true
