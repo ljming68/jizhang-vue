@@ -54,6 +54,7 @@
 
 <script>
 import {validEmail} from '@/utils/validate'
+import {mapActions} from 'vuex'
 export default {
   name: 'login',
   data(){
@@ -83,7 +84,11 @@ export default {
 
     }
   },
+  computed:{
+    
+  },
   methods:{
+    ...mapActions(['user/login']),
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -95,16 +100,22 @@ export default {
       })
     },
     handleLogin(){
-
-
       this.$refs.loginForm.validate( async isOK =>{
         
         if(isOK){
           try{
-            console.log(this.loading)
             this.loading = true
             // 执行user/login 的方法
             // await this['user/login'](this.loginForm)
+
+            const dataForm = {
+              mobile:'13800000002',
+              password:'123456',
+            }
+            // console.log(dataForm)
+            // console.log(this['user/login'])
+            await this['user/login'](dataForm)
+
             this.$message.success('登录成功')
             this.$router.push('/')
           }catch(error){
