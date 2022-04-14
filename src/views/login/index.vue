@@ -40,7 +40,7 @@
             <el-link type="danger" style="float:right">忘记密码?</el-link>
           </el-col>
         </el-row>
-        <el-row type="flex" justify="center" style="margin-top:40px;color:red">
+        <el-row type="flex" justify="center" align="middle" style="margin-top:40px;color:red">
           <el-col :span="12">还没有账号
             <router-link to="/register">
               <el-link type="primary" >点击注册</el-link>

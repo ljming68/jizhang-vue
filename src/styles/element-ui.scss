@@ -22,6 +22,15 @@
   left: 0;
   position: relative;
   margin: 0 auto;
+  .el-dialog__header{
+    background-color: #409EFF;
+  }
+  .el-dialog__title{
+    color: #fff;
+  }
+  .el-dialog__close,.el-icon,.el-icon-close{
+    color: #fff;
+  }
 }
 
 // refine element ui upload

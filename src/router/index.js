@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import accounts from './modules/accounts'
+import adminmanagement from './modules/adminmanagement'
+import bookkeeping from './modules/bookkeeping'
+import count from './modules/count'
+import personal from './modules/personal'
+import usermanagement from './modules/usermanagement'
 Vue.use(Router)
 
 /* Layout */
@@ -31,9 +37,9 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: 'dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'home' }
     }]
   },
 
@@ -48,10 +54,21 @@ export const constantRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
+// 动态路由
+export const asyncRoutes = [
+  accounts,
+  bookkeeping,
+  count,
+  personal,
+  adminmanagement,
+  usermanagement,
+
+]
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  // routes: constantRoutes
+  routes: [...constantRoutes, ...asyncRoutes] // 临时合并所有的路由
 })
 
 const router = createRouter()
