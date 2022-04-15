@@ -26,7 +26,7 @@
               <el-input v-model="registerForm.ecode" placeholder="请输入邮箱验证码"></el-input>
             </el-col>
             <el-col :span="4">
-               <el-button type="primary" round class="btn_send" @click="sendEmail">发送</el-button>
+               <el-button type="primary" round class="btn_send" @click="sendEmail($event)">发送</el-button>
             </el-col>
           </el-row>
           
@@ -63,6 +63,7 @@
 
 <script>
 import {validEmail} from '@/utils/validate'
+import {register,getEcode} from '@/api/user'
 export default {
   name: 'register',
   data(){
@@ -86,7 +87,7 @@ export default {
 
     return{
       registerForm:{
-        userName:'admin@qq.com',
+        userName:'1195107585@qq.com',
         passWord:'123456',
         passWord2:'123456',
         ecode:'000000',
@@ -125,8 +126,28 @@ export default {
         this.password2Type === "password"? this.password2Type = '' : this.password2Type = "password"
       }
     },
-    sendEmail(){
+    async sendEmail(event){
+      console.log(event.value)
+      this.$refs.registerForm.validateField('userName',async error=>{
+        if(error){
+          return false
+        }else{
+          try{
+            const data = {
+              email:this.registerForm.userName
+            }
+            this.event.target.value = ''
+            // await getEcode(data)
+            this.$message.success('发送成功')
+
+          }catch(error){
+            console.log('getecode',error)
+          }
+        }
+      })
+      // console.log(res)
       
+
     },
     handleRegister(){
       this.$refs.registerForm.validate(isOK =>{

@@ -23,8 +23,9 @@ const actions = {
     // const result = await login(data)
     // axios默认给数据加了一层data,在request 中处理了
 
+    // const result = await login(data)
     const result = await login(data)
-    console.log('loginStore',result)
+    // console.log('loginStore',result)
     // if(data.success){
     //   let token = data
     //   commit('setToken',token)

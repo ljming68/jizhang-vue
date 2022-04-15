@@ -40,10 +40,10 @@ module.exports = {
     // 代理配置
     proxy:{
       'api':{
-        target:"http://ihrm-java.itheima.net/",
+        target:"http://localhost:5000/", //http://127.0.0.1:5000/
         changeOrigin:true, //是否跨域
         // 重写路径
-        pathRewrite:{}
+        pathRewrite:{"^/api":""},
       }
     }
   },

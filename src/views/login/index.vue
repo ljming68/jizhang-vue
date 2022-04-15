@@ -25,7 +25,7 @@
             <i class="el-icon-picture"></i>
           </span>
           <el-input v-model="loginForm.imgCode" placeholder="请输入验证码" style="width:60%" @keyup.enter.native="handleLogin"></el-input>
-          <img class="code_img" src="https://tse1-mm.cn.bing.net/th/id/R-C.79a78eba70b41c99b3000d0cf5f5352d?rik=1LJg2oJDhVBc8Q&riu=http%3a%2f%2fwww.xiaobaixitong.com%2fd%2ffile%2fhelp%2f2018-08-06%2ff15ce5d652d8da38e9e0e384f35b39d7.png&ehk=9Piy2qOJgEjmFI%2f3BdqQyrGoTM%2b8OSxmfFfnFrzQnzg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1" alt="">
+          <img class="code_img" src="http://localhost:5000/vcode">
         </el-form-item>
         <el-row type="flex" justify="center">
           <el-button :loading="loading" size="medium" type="primary" @click="handleLogin" >登录</el-button>
@@ -55,6 +55,7 @@
 <script>
 import {validEmail} from '@/utils/validate'
 import {mapActions} from 'vuex'
+import axios from 'axios'
 export default {
   name: 'login',
   data(){
@@ -64,7 +65,7 @@ export default {
     }
     return{
       loginForm:{
-        userName:'admin@qq.com',
+        userName:'11951075895@qq.com',
         passWord:'123456',
         imgCode:'0000',
       },
@@ -106,15 +107,16 @@ export default {
           try{
             this.loading = true
             // 执行user/login 的方法
-            // await this['user/login'](this.loginForm)
+            await this['user/login'](this.loginForm)
+            
 
-            const dataForm = {
-              mobile:'13800000002',
-              password:'123456',
-            }
+            // const dataForm = {
+            //   mobile:'13800000002',
+            //   password:'123456',
+            // }
             // console.log(dataForm)
             // console.log(this['user/login'])
-            await this['user/login'](dataForm)
+            // await this['user/login'](dataForm)
 
             this.$message.success('登录成功')
             this.$router.push('/')
