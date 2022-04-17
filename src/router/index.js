@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import accounts from './modules/accounts'
-import adminmanagement from './modules/adminmanagement'
+import permission from './modules/permission'
 import bookkeeping from './modules/bookkeeping'
 import count from './modules/count'
 import personal from './modules/personal'
@@ -60,7 +60,7 @@ export const asyncRoutes = [
   bookkeeping,
   count,
   personal,
-  adminmanagement,
+  permission,
   usermanagement,
 
 ]

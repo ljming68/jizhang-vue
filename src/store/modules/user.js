@@ -30,12 +30,12 @@ const actions = {
     //   let token = data
     //   commit('setToken',token)
     // }
-    commit('setToken',result)
+    // commit('setToken',result)
     
   },
   // 退出登录
   logout({commit}){
-    commit('removeToken')
+    // commit('removeToken')
   }
 }
 

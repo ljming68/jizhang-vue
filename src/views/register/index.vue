@@ -127,7 +127,6 @@ export default {
       }
     },
     async sendEmail(event){
-      console.log(event.value)
       this.$refs.registerForm.validateField('userName',async error=>{
         if(error){
           return false
@@ -136,8 +135,7 @@ export default {
             const data = {
               email:this.registerForm.userName
             }
-            this.event.target.value = ''
-            // await getEcode(data)
+            await getEcode(data)
             this.$message.success('发送成功')
 
           }catch(error){
@@ -145,16 +143,24 @@ export default {
           }
         }
       })
-      // console.log(res)
+
       
 
     },
-    handleRegister(){
-      this.$refs.registerForm.validate(isOK =>{
+    async handleRegister(){
+      this.$refs.registerForm.validate(async isOK =>{
         if(isOK){
           try{
             this.loading = true
-            // await xxx
+            const {userName,passWord2,ecode} = {...this.registerForm}
+            const data = {
+              username:userName,
+              password:passWord2,
+              ecode,
+            }
+            
+            console.log(data)
+            await register(data)
             this.$message.success('注册成功')
             this.$router.push('/login')
 
