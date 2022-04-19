@@ -28,7 +28,7 @@ const service = axios.create({
 service.interceptors.request.use(config=>{
   config.transformRequest = function(data){
     data = qs.stringify(data)
-    console.log(data)
+    // console.log(data)
 
     // let str = ''
     // for (let k in data){

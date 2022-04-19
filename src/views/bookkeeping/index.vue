@@ -3,11 +3,11 @@
     <div class="app-container">
       <el-card class="bookkeeping-card">
         <el-tabs>
-          <el-tab-pane label="支出">
+          <el-tab-pane  label="支出">
             <jz-form />
           </el-tab-pane>
-          <el-tab-pane label="收入">
-            <jz-form />
+          <el-tab-pane  label="收入">
+            <jz-form :inandouttype="inandouttype" />
           </el-tab-pane>
         </el-tabs>
       </el-card>
@@ -21,6 +21,16 @@ export default {
   name: '',
   components:{
     jzForm,
+  },
+  data(){
+    return{
+      inandouttype:1
+    }
+  },
+  methods:{
+    // handleClick(){
+    //   this.see = false
+    // }
   }
 }
 </script>

@@ -65,7 +65,7 @@ export default {
     }
     return{
       loginForm:{
-        userName:'11951075895@qq.com',
+        userName:'1195107585@qq.com',
         passWord:'123456',
         imgCode:'0000',
       },

@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import {getAccountList} from '@/api/account'
 export default {
   name: "",
   data(){
@@ -60,7 +61,7 @@ export default {
       list:[],
       page:{
         page:1,
-        size:1,
+        size:2,
         total:0
       },
     }
@@ -69,23 +70,15 @@ export default {
     this.getaccountsList()
   },
   methods:{
-    getaccountsList(){
-      this.list = [
-        {payid:'1',paytypeid:'10',payname:'微信',balance:'1000'},
-        {payid:'2',paytypeid:'10',payname:'微信2',balance:'10500'},
-        {payid:'3',paytypeid:'10',payname:'微信23',balance:'11000'},
-
-
-
-
-
-        
-      ]
-      this.page.total = this.list.length
+    async getaccountsList(){
+      const {rows,total} = await getAccountList(this.page)
+      console.log(rows,total)
+      this.list = rows
+      this.page.total = total
     },
     changePage(newPage){
       this.page.page = newPage
-      this.getUserList()
+      this.getaccountsList()
     }
   }
 

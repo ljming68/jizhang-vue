@@ -21,3 +21,10 @@ export function validUsername(str) {
 export function validEmail(str){
   return /.+@.+\..+/.test(str)
 }
+
+/**
+ * 限制为数字，并且数字最多带两位小数
+ */
+export function validAmount(str){
+  return /^\d+(.\d{1,2})?$/.test(str)
+}
