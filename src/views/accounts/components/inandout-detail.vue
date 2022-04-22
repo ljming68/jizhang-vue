@@ -19,6 +19,7 @@
       </template>
     </accounts-title>
     <el-card>
+      <!-- 搜索 -->
       <el-row style="height:60px">
          <el-button icon="el-icon-search" circle></el-button>
       </el-row>
@@ -38,8 +39,8 @@
         <el-table-column   label="使用账户" prop="payid" />
         <el-table-column label="操作" fixed="right" width="200">
           <template slot-scope="{row}">
-            <el-button type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <!-- <el-button type="text" size="small">查看</el-button> -->
+            <el-button type="text" size="small" @click="editRecord(row.recordid)">编辑</el-button>
             <el-button type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
@@ -67,12 +68,14 @@ export default {
   name: "",
   data() {
     return {
-      list: [],
+      list: [], //纪录列表
       page: {
         page: 1,
         size: 5,
         total: 0
       },
+      showdialog:false,
+
 
     }
   },
@@ -81,7 +84,7 @@ export default {
   },
   created() {
     this.getRecordList();
-    console.log(this.list)
+    // console.log(this.list)
   },
   methods: {
     async getRecordList() {
@@ -120,6 +123,10 @@ export default {
       // console.log(result)
       // return obj ? obj.id : '未知'
       return '11'
+    },
+    // 编辑记录
+    editRecord(){
+      
     }
   }
 };

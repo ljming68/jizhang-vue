@@ -30,11 +30,11 @@
         <el-table-column label="账户余额" prop="balance"></el-table-column>
         <el-table-column label="操作" fixed="right" width="220">
           <template slot-scope="{row}">
-            <el-button type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
-            <el-button type="text" size="small">转账</el-button>
-            <el-button type="text" size="small">记一笔</el-button>
-            <el-button type="text" size="small">删除</el-button>
+            <!-- <el-button type="text" size="small">查看</el-button> -->
+            <el-button type="text" size="small" @click="editAccount(row.payid)">编辑</el-button>
+            <el-button type="text" size="small" @click="transferAccount(row.payid)">转账</el-button>
+            <!-- <el-button type="text" size="small">记一笔</el-button> -->
+            <el-button type="text" size="small" @click="delAccount(row.payid)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -50,14 +50,23 @@
       </el-row>
     </el-card>
     <add-account :showDialog.sync="showDialog"/>
+    <edit-account ref="edit" :showEditDialog.sync="showEditDialog" :pay-id="payId"/>
+    <transfer-account ref="trans" :showtransDialog.sync="showtransDialog" :pay-id="payId"/>
   </div>
 </template>
 
 <script>
-import {getAccountList} from '@/api/account'
+import {getAccountList,delAccount} from '@/api/account'
 import RecordEnum from '@/api/constant/record'
+import EditAccount from './edit-account'
+import TransferAccount from './transfer-account'
 export default {
   name: "",
+  components:{
+    EditAccount,
+    TransferAccount
+
+  },
   data(){
     return{
       list:[],
@@ -67,6 +76,9 @@ export default {
         total:0
       },
       showDialog:false,
+      showEditDialog:false,
+      showtransDialog:false,
+      payId:null,
     }
   },
   created(){
@@ -89,11 +101,46 @@ export default {
       const obj = RecordEnum.accountType.find(item => item.id === cellValue)
       return obj ? obj.value : '未知'
     },
-    
+    // 编辑账户
+    async editAccount(payid){
+      this.payId = payid
+      // console.log(payid)
+      await this.$refs.edit.getAccountById(payid)
+      this.showEditDialog = true
+    },
+    // 删除账户
+    async delAccount(payid){
+      try{
+        await this.$confirm(`账户下所有账单数据会被清除！您确认删除吗？`,"提示")
+        await delAccount(payid)
+        this.$message.success('删除成功')
+        this.getaccountsList()
+        this.$parent.refreshRecord()
+      }catch(error){
+
+      }
+    },
+    // 转账
+    async transferAccount(payid){
+      this.payId = payid
+      // console.log(payid)
+      await this.$refs.trans.getFirstAccountById(payid)
+      this.showtransDialog = true
+    }    
   }
 
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.el-message-box{
+  .el-message-box__header{
+  background-color: #409EFF;
+  border:0;
+  }
+  .el-message-box__close,.el-icon-close,.el-message-box__title{
+    color: #fff;
+  }
+}
+
 </style>

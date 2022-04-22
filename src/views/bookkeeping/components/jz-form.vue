@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="addRecord" :model="formData" :rules="rules" class="form-container">
+  <el-form ref="addRecord" :model="formData" :rules="rules" class="form-container" label-width="100px">
     <el-form-item label="金额" prop="amount">
       <el-input v-model="formData.amount" style="width:80%" placeholder="请输入金额"></el-input>
     </el-form-item>

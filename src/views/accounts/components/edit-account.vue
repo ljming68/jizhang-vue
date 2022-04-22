@@ -1,6 +1,6 @@
 <template>
-  <el-dialog title="添加账户" :visible="showDialog" @close="btnCancel">
-    <el-form ref="addAccount" :model="formData" :rules="rules" label-width="120px">
+  <el-dialog title="编辑账户" :visible="showEditDialog" @close="btnCancel">
+    <el-form ref="editAccount" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="账户名称" style="width:80%" prop="payname">
         <el-input v-model="formData.payname"></el-input>
       </el-form-item>
@@ -37,14 +37,20 @@
 </template>
 
 <script>
-import {getAccountTypeList,addAccount} from '@/api/account'
+import {getAccountTypeList,getAccountById,updateAccount} from '@/api/account'
 import {tranListToTreeData} from "@/utils/index"
 import RecordEnum from '@/api/constant/record'
 import {validAmount} from '@/utils/validate'
 export default {
   props:{
-    showDialog:Boolean,
-    default:false,
+    showEditDialog:{
+      type:Boolean,
+      default:false
+    },
+    payId:{
+      type:Number,
+      default:null
+    }
   },
   name: '',
   data(){
@@ -68,33 +74,30 @@ export default {
       treeData:[], // 定义数组接收树形数据
       showTree:false,
       loading: false, // 控制树的显示或者隐藏进度条
+
     }
   },
   created(){
-    // this.getAccountTypeList()
+    // this.getAccountById()
   },
   methods:{
     async btnOK(){
       try{
-        await this.$refs.addAccount.validate()
+        await this.$refs.editAccount.validate()
         const {payname,balance,typename} = {...this.formData}
-
+        
         this.paytypeid = this.formatType(typename)
         // console.log(this.paytypeid)
         const addData = {
           payname,
           balance,
           paytypeid:this.paytypeid,
+          payid:this.payId,
         }
-        await addAccount(addData)
-        this.$message.success('添加账户成功')
-        if (this.$parent.getaccountsList){
-          this.$parent.getaccountsList()
-        }else{
-          this.$parent.getAccountList()
-        }
-
-        this.$parent.showDialog = false
+        await updateAccount(addData)
+        this.$message.success('更新账户成功')
+        this.$parent.getaccountsList()
+        this.$parent.showEditDialog = false
 
       }catch(error){
         console.log(error)
@@ -105,14 +108,15 @@ export default {
       this.formData = {
         payname:'',
         balance:'',
-        paytypeid:'',
+        paytypeid:null,
+         typename:'',
       }
       // 重置校验结果
-      this.$refs.addAccount.resetFields()
-      this.$emit('update:showDialog',false)
+      this.$refs.editAccount.resetFields()
+      this.$emit('update:showEditDialog',false)
 
     },
-    // 获取账户列表
+    // 获取账户类型列表
     async getAccountTypeList(){
       this.showTree = true
       this.loading = true
@@ -129,13 +133,37 @@ export default {
         // console.log(this.formData)
         this.showTree = false
     },
-    // // 格式化账户类型
+    // 格式化账户类型 名字找id
     formatType(cellValue){
       // 找 0 1 对应的值
-      console.log(cellValue)
-      const obj = RecordEnum.accountType.find(item => item.value === cellValue)
-      return obj ? obj.id : '未知'
+      // console.log(cellValue)
+      if(typeof cellValue === 'string'){
+        const obj = RecordEnum.accountType.find(item => item.value === cellValue)
+        return obj ? obj.id : '未知'
+      }else{
+        const obj = RecordEnum.accountType.find(item => item.id === cellValue)
+        return obj ? obj.value : '未知'
+      }
+        
+    },
+    // 
+    // 根据账户id获取账户信息
+    async getAccountById(payid){
+      // console.log(payid)
+      const result =  await getAccountById(payid)
+      const {payname,balance,paytypeid} = result[0]
+      let typename = this.formatType(paytypeid)
+      // console.log(result)
+      
+      
+      this.formData = {
+        payname,
+        balance,
+        typename,
+
+      }
     }
+
   }
 }
 </script>

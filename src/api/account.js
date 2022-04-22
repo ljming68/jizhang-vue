@@ -41,3 +41,37 @@ export function getAccountById(id){
     method: 'get'
   })
 }
+
+/**
+* 更新账户
+*/
+export function updateAccount(data){
+  return request({
+    url: `/account/${data.payid}`,
+    method: 'put',
+    data,
+
+  })
+}
+
+/**
+* 删除账户
+*/
+export function delAccount(id){
+  return request({
+    url: `/account/${id}`,
+    method: 'delete',
+
+  })
+}
+
+/**
+* 转账
+*/
+export function transAccount(data) {
+  return request({
+    url:'/transaccount',
+    method:'post',
+    data
+  })
+ }
