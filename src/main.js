@@ -19,6 +19,7 @@ import '@/permission' // permission control
 import Component from '@/components'
 Vue.use(Component) // 注册自己的插件
 
+
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明

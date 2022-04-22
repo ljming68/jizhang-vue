@@ -2,18 +2,40 @@
   <el-card class="accounts-title">
     
       <el-row type="flex" justify="space-between" align="middle">
-        <slot name="top" />
+        <el-col>
+          <i class="el-icon-info" />
+          <slot name="left">
+          <!-- <span>净资产</span>
+          <span>$1475.00</span> -->
+        </slot>
+        </el-col>
+        <el-col>
+          <i class="el-icon-info" />
+          <slot name="center">
+          <!-- <span>净资产</span>
+          <span>$1475.00</span> -->
+        </slot>
+        </el-col>
+        <el-col>
+          <i class="el-icon-info" />
+          <slot name="right">
+          <!-- <span>净资产</span>
+          <span>$1475.00</span> -->
+        </slot>
+        </el-col>
+        
+        
         <!-- <span>净资产</span>
         <span>$1475.00</span>
         <span>眼睛</span> -->
       </el-row>
     <!-- </slot> -->
-    <el-row type="flex" justify="space-between" align="middle">
+    <!-- <el-row type="flex" justify="space-between" align="middle">
       <slot name="middle" />
     </el-row>
     <el-row type="flex" justify="space-between" align="middle">
       <slot name="bottom" />
-    </el-row>
+    </el-row> -->
   </el-card>
 </template>
 

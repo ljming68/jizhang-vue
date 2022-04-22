@@ -90,7 +90,7 @@ export default {
         userName:'1195107585@qq.com',
         passWord:'123456',
         passWord2:'123456',
-        ecode:'000000',
+        ecode:'AAAAAA',
       },
       rules:{
         userName:[{required:true,message:'邮箱地址不能为空',trigger:'blur'},
@@ -222,14 +222,15 @@ $dark_gray:#889aa4;
   .register-container{
     height: 100%;
     width: 100%;
-    background-color:pink;
+    background-color:rgb(68, 157, 230);
 
     .register-card{
       width: 500px;
       // height: 300px;
       padding: 100px 35px 0;
       max-width: 100%;
-      background-color: rgb(123, 128, 128);
+      background-color: rgb(68, 157, 230);
+      border:0;
       position: absolute; // 不设置参考position 就相对于根元素定位
       left: 0;
       right: 0;

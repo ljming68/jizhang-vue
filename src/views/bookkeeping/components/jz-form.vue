@@ -14,7 +14,7 @@
           <el-option v-for="item in accountList" :key="item.payid" :label="item.value" :value="item.payid" />
         </el-select>
         </el-col>
-        <el-col :span="6"><el-button size="medium" type="primary" class="btn_add">添加账户</el-button></el-col>
+        <el-col :span="6"><el-button size="medium" type="primary" class="btn_add" @click="addAcount">添加账户</el-button></el-col>
       </el-row>
       
     </el-form-item>
@@ -56,7 +56,7 @@ export default {
         amount:'',
         recordtime:'',
         note:'',
-        payid:''
+        payid:null,
       },
       rules:{
         category:[{required: true, message: '类型不能为空', trigger: 'blur'},
@@ -136,6 +136,10 @@ export default {
         this.loading  = false
         console.log('addRecord',error)
       }
+    },
+    addAcount(){
+      this.$emit('update:showDialog',true)
+      this.$emit('getAccountList')
     }
   }
 

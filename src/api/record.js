@@ -10,3 +10,14 @@ export function addRecord(data) {
    data
  })
 }
+
+/**
+ * 获取收支明细列表
+ */
+export function getRecordList(params) {
+  return request({
+    url:'/recordlist',
+    method:'get',
+    params
+  })
+}

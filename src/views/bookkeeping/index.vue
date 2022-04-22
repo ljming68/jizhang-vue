@@ -4,14 +4,15 @@
       <el-card class="bookkeeping-card">
         <el-tabs>
           <el-tab-pane  label="支出">
-            <jz-form />
+            <jz-form ref="add" :showDialog.sync="showDialog" />
           </el-tab-pane>
           <el-tab-pane  label="收入">
-            <jz-form :inandouttype="inandouttype" />
+            <jz-form :inandouttype="inandouttype" :showDialog.sync="showDialog" />
           </el-tab-pane>
         </el-tabs>
       </el-card>
     </div>
+    <add-account :showDialog.sync="showDialog"/>
   </div>
 </template>
 
@@ -24,13 +25,14 @@ export default {
   },
   data(){
     return{
-      inandouttype:1
+      inandouttype:1,
+      showDialog:false,
     }
   },
   methods:{
-    // handleClick(){
-    //   this.see = false
-    // }
+    getAccountList(){
+      this.$refs.add.getAccountList()
+    }
   }
 }
 </script>

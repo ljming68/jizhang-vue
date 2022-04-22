@@ -56,8 +56,8 @@ export const constantRoutes = [
 
 // 动态路由
 export const asyncRoutes = [
-  accounts,
   bookkeeping,
+  accounts,
   count,
   personal,
   permission,

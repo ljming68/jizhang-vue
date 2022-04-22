@@ -32,18 +32,18 @@
         </el-row>
       </el-form>
       <div class="login-footer">
-        <el-row >
+        <!-- <el-row >
           <el-col :span="8">
             <el-checkbox v-model="checked">记住我</el-checkbox>
           </el-col>
           <el-col :span="16">
             <el-link type="danger" style="float:right">忘记密码?</el-link>
           </el-col>
-        </el-row>
+        </el-row> -->
         <el-row type="flex" justify="center" align="middle" style="margin-top:40px;color:red">
           <el-col :span="12">还没有账号
             <router-link to="/register">
-              <el-link type="primary" >点击注册</el-link>
+              <el-link type="primary" style="color:blue">点击注册</el-link>
             </router-link>
           </el-col>
         </el-row>
@@ -136,7 +136,7 @@ export default {
 <style lang="scss" >
 $bg:rgba(0, 0, 0, 0.1);
 $light_gray:#fff;
-$dark_gray:#889aa4;
+$dark_gray:#339fda;
 $cursor: #fff;
 .login-container{
   // 重置element-ui css
@@ -177,10 +177,10 @@ $cursor: #fff;
 .login-container{
   height: 100%;
   width: 100%;
-  background-color:pink;
+  background-color:rgb(68, 157, 230);
   // overflow: hidden;
-  background-image: url('~@/assets/common/login.jpg'); // 设置背景图片
-  background-position: center; // 将图片位置设置为充满整个屏幕
+  // background-image: url('~@/assets/common/login.jpg'); // 设置背景图片
+  // background-position: center; // 将图片位置设置为充满整个屏幕
 
  
   .login-card{
@@ -188,7 +188,8 @@ $cursor: #fff;
     // height: 300px;
     padding: 100px 35px 0;
     max-width: 100%;
-    background-color: rgb(123, 128, 128);
+    background-color: rgb(68, 157, 230);
+    border:0;
     position: absolute; // 不设置参考position 就相对于根元素定位
     left: 0;
     right: 0;

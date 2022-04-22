@@ -2,19 +2,20 @@
   <div>
     <accounts-title>
       <!-- <span slot="before">总资产</span> -->
-      <template slot="top">
+       <template slot="left">
         <span>本月结余</span>
-        <span>$1475.00</span>
+        <span v-html="'\u2002'"></span>
+        <span>￥1000.00</span>
       </template>
-      <template slot="middle">
+      <template slot="center">
         <span>本月支出</span>
-        <span></span>
-        <span>$1475.00</span>
+        <span v-html="'\u2002'"></span>
+        <span>￥100.00</span>
       </template>
-      <template slot="bottom">
+      <template slot="right">
         <span>本月收入</span>
-        <span></span>
-        <span>$2000.00</span>
+        <span v-html="'\u2002'"></span>
+        <span>￥1100.00</span>
       </template>
     </accounts-title>
     <el-card>
@@ -23,12 +24,18 @@
       </el-row>
       <el-table :data="list" border>
         <el-table-column label="序号" type="index" />
-        <el-table-column label="记录名称" prop='recordname' />
+        <el-table-column label="记录类型" prop='category' />
         <el-table-column label="金额" prop="amount" />
-        <el-table-column label="收支类型" prop="type" />
-        <el-table-column label="记录时间" prop="recordtime" />
+        <el-table-column :formatter="formatType" label="收支类型" prop="type" />
+        <el-table-column label="记录时间" prop="recordtime">
+          <!-- 使用过滤器 -->
+          <template slot-scope="obj">
+              
+            {{obj.row.recordtime | formatDate }}
+          </template>
+        </el-table-column>
         <el-table-column label="备注" prop="note"/>
-        <el-table-column label="使用账户" prop="payid" />
+        <el-table-column   label="使用账户" prop="payid" />
         <el-table-column label="操作" fixed="right" width="200">
           <template slot-scope="{row}">
             <el-button type="text" size="small">查看</el-button>
@@ -52,6 +59,10 @@
 </template>
 
 <script>
+import {getRecordList} from '@/api/record'
+import {formatDate} from '@/utils/time'
+import RecordEnum from '@/api/constant/record'
+import {getAccountById} from '@/api/account'
 export default {
   name: "",
   data() {
@@ -59,26 +70,56 @@ export default {
       list: [],
       page: {
         page: 1,
-        size: 1,
+        size: 5,
         total: 0
-      }
-    };
+      },
+
+    }
+  },
+  filters:{
+    formatDate,
   },
   created() {
-    this.getaccountsList();
+    this.getRecordList();
+    console.log(this.list)
   },
   methods: {
-    getaccountsList() {
-      this.list = [
-        { recordname: "1", amount: "100", type: "支出", recordtime:'2022-03-15 17:04:32', note: "ok" ,payid:'1'},
-        { recordname: "sd", amount: "1000", type: "支出", recordtime:'2022-03-15 17:04:32', note: "ok",payid:'1' },
-        { recordname: "1sd", amount: "4100", type: "收入", recordtime:'2022-03-15 17:04:32', note: "ok",payid:'1' },
-      ];
-      this.page.total = this.list.length;
+    async getRecordList() {
+      try{
+        const {rows,total} = await getRecordList(this.page)
+        console.log(rows,total)
+        this.list = rows
+
+        // this.list = rows.map(item=>{
+        //   return formatDate(item.recordtime)
+        // })
+        this.page.total = total
+        
+
+
+      }catch(error){
+        console.log('reocrd',error)
+      }
+      
     },
     changePage(newPage) {
       this.page.page = newPage;
-      this.getUserList();
+      this.getRecordList()
+    },
+    // 格式化收支类型
+    formatType(row, column, cellValue, index){
+      // 找 0 1 对应的值
+      const obj = RecordEnum.inandoutType.find(item => item.id === cellValue)
+      return obj ? obj.value : '未知'
+    },
+    // 格式化账户类型
+    async formatPayid(cellValue){
+      // 找 0 1 对应的值
+      console.log(cellValue)
+      // const result = await getAccountById(payid)
+      // console.log(result)
+      // return obj ? obj.id : '未知'
+      return '11'
     }
   }
 };
