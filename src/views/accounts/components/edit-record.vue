@@ -1,27 +1,29 @@
 <template>
-  <el-dialog title="编辑记录" :visible="showEditDialog" @close="btnCancel">
-    <el-form ref="editAccount" :model="formData" :rules="rules" label-width="120px">
-      <el-form-item label="账户名称" style="width:80%" prop="payname">
-        <el-input v-model="formData.payname"></el-input>
+  <el-dialog title="编辑记录" :visible="showDialog" @close="btnCancel">
+    <el-form ref="editRecord" :model="formData" :rules="rules" label-width="120px">
+      <el-form-item label="记录类型" style="width:80%" prop="category">
+        <el-input v-model="formData.category"></el-input>
       </el-form-item>
-      <el-form-item label="账户类型" style="width:80%" prop="typename">
-        <el-input v-model="formData.typename" placeholder="请选择账户类型" @focus="getAccountTypeList"></el-input>
-          <div 
-            class="down-tree"
-            >
-            <!-- 放置一个tree 组件 -->
-            <el-tree
-            :data="treeData"
-            v-if="showTree"
-            v-loading="loading" 
-            accordion
-            :props="{ label: 'typename' }"
-            @node-click="selectNode"
-            />
-          </div>
+      <el-form-item label="记录金额" style="width:80%" prop="amount">
+        <el-input v-model="formData.amount" ></el-input>
       </el-form-item>
-      <el-form-item label="账户余额" style="width:80%" prop="balance">
-        <el-input v-model="formData.balance"></el-input>
+      <el-form-item label="收支类型" style="width:80%" >
+        <el-select  v-model="formData.inandouttype" style="width:100%;display:inline-block" placeholder="请选择" >
+        <!-- 遍历只能遍历组件的数据 -->
+          <el-option v-for="item in typeList" :key="item.id" :label="item.value" :value="item.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="使用账户" style="width:80%" >
+        <el-select v-model="formData.payid" style="width:100%;display:inline-block" placeholder="请选择账户">
+          <!-- 遍历账户信息 -->
+          <el-option v-for="item in accountList" :key="item.payid" :label="item.value" :value="item.payid" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="记录时间" style="width:80%" prop="recordtime">
+          <el-date-picker v-model="formData.recordtime" type="date" placeholder="选择日期" style="width: 100%;"></el-date-picker>
+      </el-form-item>
+      <el-form-item label="备注" style="width:80%" prop="note">
+        <el-input v-model="formData.note" type="textarea" :rows="2" ></el-input>
       </el-form-item>
     </el-form>
     <!-- footer 插槽 -->
@@ -37,67 +39,77 @@
 </template>
 
 <script>
-import {getAccountTypeList,getAccountById,updateAccount} from '@/api/account'
+import {getRecordById,updateRecord} from '@/api/record'
+import {getAccountList} from '@/api/account'
 import {tranListToTreeData} from "@/utils/index"
 import RecordEnum from '@/api/constant/record'
 import {validAmount} from '@/utils/validate'
+import {formatDate} from '@/utils/time'
 export default {
   props:{
-    showEditDialog:{
+    showDialog:{
       type:Boolean,
       default:false
     },
-    payId:{
-      type:Number,
-      default:null
-    }
   },
   name: '',
   data(){
+    
     const validateAmount = function(rule,value,callback){
       validAmount(value) ? callback() : callback(new Error('只能为数字且数字最多带2位小数'))
     }
     return{
       formData:{
-        payname:'',
-        balance:'',
-        paytypeid:null,
-        typename:'',
+        category:'',
+        amount:'',
+        recordtime:'',
+        note:'',
+        inandouttype:null,
+        payid:null,
+        
       },
       rules:{
-        payname:[{required: true, message: '账户名称不能为空', trigger: 'blur'}],
-        balance:[{required: true, message: '账户余额不能为空', trigger: 'blur'},
+        category:[{required: true, message: '类型不能为空', trigger: 'blur'},
+        {}
+        ],
+        amount:[{required: true, message: '金额不能为空', trigger: 'blur'},
         {required:true,trigger:'blur',validator: validateAmount}
         ],
-        typename:[{required: true, message: '账户类型不能为空', trigger: 'change'}],
+        recordtime:[{required: true, message: '日期不能为空', trigger: 'blur'}],
+        note:[{}], 
+        payid:[{}], 
       },
-      treeData:[], // 定义数组接收树形数据
-      showTree:false,
-      loading: false, // 控制树的显示或者隐藏进度条
-
+      page:{
+        page:1,
+        size:1000,
+        total:0
+      },
+      accountList:[],// 账户列表
+      typeList:[], //收支类型
     }
   },
   created(){
-    // this.getAccountById()
+    this.getAccountList()
   },
   methods:{
     async btnOK(){
       try{
-        await this.$refs.editAccount.validate()
-        const {payname,balance,typename} = {...this.formData}
-        
-        this.paytypeid = this.formatType(typename)
-        // console.log(this.paytypeid)
-        const addData = {
-          payname,
-          balance,
-          paytypeid:this.paytypeid,
-          payid:this.payId,
+        await this.$refs.editRecord.validate()
+        let {category,amount,recordtime,note,payid,inandouttype,recordid} = {...this.formData}
+        recordtime = formatDate(recordtime)
+        const updateData = {
+          category,
+          amount,
+          recordtime,
+          note,
+          payid,
+          inandouttype,
+          recordid,
         }
-        await updateAccount(addData)
-        this.$message.success('更新账户成功')
-        this.$parent.getaccountsList()
-        this.$parent.showEditDialog = false
+        await updateRecord(updateData)
+        this.$message.success('更新记录成功')
+        this.$parent.getRecordList();
+        this.$parent.showDialog = false
 
       }catch(error){
         console.log(error)
@@ -106,32 +118,32 @@ export default {
     btnCancel(){
       // 重置表单
       this.formData = {
-        payname:'',
-        balance:'',
-        paytypeid:null,
-         typename:'',
+        category:'',
+        amount:'',
+        recordtime:'',
+        note:'',
+        inandouttype:null,
+        payid:null,
       }
       // 重置校验结果
-      this.$refs.editAccount.resetFields()
-      this.$emit('update:showEditDialog',false)
+      this.$refs.editRecord.resetFields()
+      this.$emit('update:showDialog',false)
 
     },
-    // 获取账户类型列表
-    async getAccountTypeList(){
-      this.showTree = true
-      this.loading = true
-      const result = await getAccountTypeList()
-      // console.log(result)
+    // 获取账户列表
+    async getAccountList(){
+      const {rows} = await getAccountList(this.page)
+      // console.log('++++',this.formData.payid)
+      let accountList = rows.map((item, index)=>{
 
-      this.treeData = tranListToTreeData(result,null)
-      // console.log(this.treeData)
-      this.loading = false
-    },
-    // 选择账户类型
-    selectNode(node){
-        this.formData.typename = node.typename
-        // console.log(this.formData)
-        this.showTree = false
+        const value = `${item.payname}---${this.formatType(item.paytypeid)}---${item.balance}`
+        return {'payid':item.payid,'value':value}
+      })
+      accountList.unshift({'payid':null,'value':'不计入账户'})
+      this.accountList = accountList
+      this.typeList = RecordEnum.inandoutType 
+      // console.log(this.accountList)
+      
     },
     // 格式化账户类型 名字找id
     formatType(cellValue){
@@ -148,20 +160,22 @@ export default {
     },
     // 
     // 根据账户id获取账户信息
-    async getAccountById(payid){
-      // console.log(payid)
-      const result =  await getAccountById(payid)
-      const {payname,balance,paytypeid} = result[0]
-      let typename = this.formatType(paytypeid)
-      // console.log(result)
-      
-      
+    async getRecordById(recordid){
+      // console.log(recordid)
+      const result =  await getRecordById(recordid)
+      let {category,amount,recordtime,note,type,payid} = result[0]
+      amount = Math.abs(amount)
       this.formData = {
-        payname,
-        balance,
-        typename,
-
+        category,
+        amount,
+        recordtime,
+        note,
+        inandouttype:type,
+        payid:payid,
+        recordid,
       }
+      this.getAccountList()
+    
     }
 
   }

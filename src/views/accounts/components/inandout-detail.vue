@@ -41,7 +41,7 @@
           <template slot-scope="{row}">
             <!-- <el-button type="text" size="small">查看</el-button> -->
             <el-button type="text" size="small" @click="editRecord(row.recordid)">编辑</el-button>
-            <el-button type="text" size="small">删除</el-button>
+            <el-button type="text" size="small" @click="delRecord(row.recordid)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -56,16 +56,21 @@
         />
       </el-row>
     </el-card>
+    <edit-record ref="edit" :showDialog.sync="showDialog" />
   </div>
 </template>
 
 <script>
-import {getRecordList} from '@/api/record'
+import {getRecordList,delRecord} from '@/api/record'
 import {formatDate} from '@/utils/time'
 import RecordEnum from '@/api/constant/record'
 import {getAccountById} from '@/api/account'
+import EditRecord from './edit-record'
 export default {
   name: "",
+  components:{
+    EditRecord,
+  },
   data() {
     return {
       list: [], //纪录列表
@@ -74,7 +79,7 @@ export default {
         size: 5,
         total: 0
       },
-      showdialog:false,
+      showDialog:false,
 
 
     }
@@ -84,6 +89,8 @@ export default {
   },
   created() {
     this.getRecordList();
+    
+    
     // console.log(this.list)
   },
   methods: {
@@ -97,6 +104,7 @@ export default {
         //   return formatDate(item.recordtime)
         // })
         this.page.total = total
+        this.$emit('update:loading',false)
         
 
 
@@ -125,9 +133,22 @@ export default {
       return '11'
     },
     // 编辑记录
-    editRecord(){
-      
-    }
+    async editRecord(recordid){
+      await this.$refs.edit.getRecordById(recordid)
+      this.showDialog = true
+    },
+    // 删除记录
+    async delRecord(recordid){
+      try{
+        await this.$confirm(`账单数据会被清除！您确认删除吗？`,"提示")
+        await delRecord(recordid)
+        this.$message.success('删除成功')
+        this.getRecordList()
+      }catch(error){
+
+      }
+    },
+    // 刷新账户页面
   }
 };
 </script>

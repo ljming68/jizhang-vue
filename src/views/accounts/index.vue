@@ -2,12 +2,12 @@
    <div class="dashboard-container">
     <div class="app-container">
       <el-card>
-        <el-tabs >
+        <el-tabs @tab-click="handleClick">
           <el-tab-pane  label="资产账户">
-            <asset-account />
+            <asset-account v-loading="loading" ref="first"  :loading.sync="loading"/>
           </el-tab-pane>
           <el-tab-pane   label="收支明细" >
-            <inandout-detail ref="second" />
+            <inandout-detail  v-loading="loading2" ref="second" :loading.sync="loading2" />
           </el-tab-pane>
 
         </el-tabs>
@@ -25,9 +25,27 @@ export default {
     AssetAccount,
     InandoutDetail
   },
+  data(){
+    return{
+      loading:true,
+      loading2:true,
+    }
+  },
   methods:{
     async refreshRecord(){
       this.$refs.second.getRecordList();
+    },
+    async refreshAccount(){
+      this.$refs.first.getaccountsList();
+    },
+    handleClick(tab, event){
+      if(tab.index == '0'){
+        this.loading = true
+        this.$refs.first.getaccountsList();
+      }else{
+        this.loading2 = true
+        this.$refs.second.getRecordList();
+      }
     }
   }
 

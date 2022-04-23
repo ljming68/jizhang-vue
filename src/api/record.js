@@ -21,3 +21,38 @@ export function getRecordList(params) {
     params
   })
 }
+
+
+
+/**
+ * 根据recordid 查找对应记录
+ */
+export function getRecordById(id){
+  return request({
+    url: `/record/${id}`,
+    method: 'get'
+  })
+}
+
+/**
+* 更新记录
+*/
+export function updateRecord(data){
+  return request({
+    url: `/record/${data.recordid}`,
+    method: 'put',
+    data,
+
+  })
+}
+
+/**
+* 删除记录
+*/
+export function delRecord(id){
+  return request({
+    url: `/record/${id}`,
+    method: 'delete',
+
+  })
+}

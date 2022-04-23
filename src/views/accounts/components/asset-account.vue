@@ -90,6 +90,7 @@ export default {
       console.log(rows,total)
       this.list = rows
       this.page.total = total
+      this.$emit('update:loading',false)
     },
     changePage(newPage){
       this.page.page = newPage

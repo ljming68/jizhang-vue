@@ -4,9 +4,9 @@
       <page-tools :show-before="true">
         <span slot="before">共100条记录</span>
         <template slot="after">
-          <el-button size="small" type="success">excel导入</el-button>
-          <el-button size="small" type="danger">excel导出</el-button>
-          <el-button size="small" type="primary" @click="showDialog=true">新增用户</el-button>
+          <!-- <el-button size="small" type="success">excel导入</el-button> -->
+          <!-- <el-button size="small" type="danger">excel导出</el-button> -->
+          <el-button icon="el-icon-plus" size="small" type="primary" @click="showDialog=true">新增用户</el-button>
         </template>
       </page-tools>
       <el-card>
