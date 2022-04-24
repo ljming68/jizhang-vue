@@ -1,12 +1,9 @@
 <template>
-  <el-dialog title="添加权限"  :visible="showDialog" @close="btnCancel">
+  <el-dialog title="添加角色"  :visible="showDialog" @close="btnCancel">
     <!-- 表单 -->
-    <el-form ref="addPermission" :model="formData" :rules="rules" label-width="120px">
-      <el-form-item label="名称" prop="name" style="width:80%">
-        <el-input v-model="formData.name"></el-input>
-      </el-form-item>
-      <el-form-item label="标识" prop="code" style="width:80%">
-        <el-input v-model="formData.code"></el-input>
+    <el-form ref="addRole" :model="formData" :rules="rules" label-width="120px">
+      <el-form-item label="名称" prop="identity" style="width:80%">
+        <el-input v-model="formData.identity"></el-input>
       </el-form-item>
       <el-form-item label="描述" style="width:80%" prop="description">
         <el-input v-model="formData.description" type="textarea" :rows="2" ></el-input>
@@ -25,7 +22,7 @@
 </template>
 
 <script>
-import {addPermission} from '@/api/permission'
+import {addRole} from '@/api/role'
 export default {
   props:{
     showDialog:{
@@ -37,13 +34,11 @@ export default {
   data(){
     return{
       formData:{
-        name:'',
-        code:'',
+        identity:'',
         description:'',
       },
       rules:{
-        name:[{required: true, message: '名称不能为空', trigger: 'blur'}],
-        code:[{required: true, message: '标识不能为空', trigger: 'blur'}],
+        identity:[{required: true, message: '名称不能为空', trigger: 'blur'}],
         description:[{required: true, message: '描述不能为空', trigger: 'blur'}],
       }
     }
@@ -51,10 +46,10 @@ export default {
   methods:{
     async btnOK(){
       try{
-        await this.$refs.addPermission.validate()
-        await addPermission(this.formData)
-        this.$message.success('添加权限成功')
-        this.$parent.getPermissionList()
+        await this.$refs.addRole.validate()
+        await addRole(this.formData)
+        this.$message.success('添加角色成功')
+        this.$parent.getRoleList()
         this.$parent.showDialog = false
 
       }catch(error){
@@ -64,12 +59,11 @@ export default {
     btnCancel(){
       // 重置表单
       this.formData = {
-        name:'',
-        code:'',
+        identity:'',
         description:'',
       }
       // 重置校验结果
-      this.$refs.addPermission.resetFields()
+      this.$refs.addRole.resetFields()
       this.$emit('update:showDialog',false)
 
     }

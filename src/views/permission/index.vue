@@ -2,7 +2,7 @@
    <div class="dashboard-container">
     <div class="app-container">
       <page-tools :show-before="true">
-        <span slot="before">共100个权限</span>
+        <span slot="before">共{{total}}个权限</span>
         <template slot="after">
           <!-- <el-button size="small" type="success">excel导入</el-button> -->
           <!-- <el-button size="small" type="danger">excel导出</el-button> -->
@@ -23,23 +23,12 @@
             </template>
           </el-table-column>
         </el-table>
-        <!-- 分页 -->
-        <el-row type="flex" justify="center" align="middle" style="height:60px">
-          <el-pagination 
-            layout="prev, pager, next"
-            :page-size="page.size"
-            :current-page="page.page"
-            :total="page.total"
-            @current-change="changePage"
-
-          />
-        </el-row>
       </el-card>
     </div>
     <!-- 新增权限 -->
     <add-permission :showDialog.sync="showDialog" />
     <!-- 编辑权限 -->
-    <edit-permission :showEditDialog.sync="showEditDialog" />
+    <edit-permission ref="edit" :showEditDialog.sync="showEditDialog" />
 
   </div>
 </template>
@@ -47,7 +36,7 @@
 <script>
 import AddPermission from './components/add-permission'
 import EditPermission from './components/edit-permission'
-
+import {getPermissionList,delPermission} from '@/api/permission'
 export default {
   name: '',
   components:{
@@ -57,11 +46,7 @@ export default {
   data(){
     return{
       list:[], //接收权限数据
-      page:{
-        page:1,
-        size:1,
-        total:0
-      },
+      total:0,
       loading:false,
       showDialog:false,
       showEditDialog:false
@@ -72,35 +57,28 @@ export default {
     this.getPermissionList()
   },
   methods:{
-    // 换页
-    changePage(newPage){
-      this.page.page = newPage
-      this.getUserList()
-    },
+    // 获取权限列表
     async getPermissionList(){
 
-      this.list = [
-        {userid:'1',username:'111@qq.com',avatar:'1.png',nickname:'111'},
-        {userid:'2',username:'111@qq.com',avatar:'1.png',nickname:'111'},
-        {userid:'3',username:'111@qq.com',avatar:'1.png',nickname:'111'},
-
-      ]
-      this.page.total = this.list.length
+      const {rows,total} = await getPermissionList()
+      this.list = rows
+      this.total = total
     },
     // 删除权限
     async delPermission(pid){
       try{
         await this.$confirm('您确定删除该权限吗？',"提示")
-        // await delUser(userid)
+        await delPermission(pid)
         this.getPermissionList()
-        this.$message.success('删除用户成功')
+        this.$message.success('删除权限成功')
         }catch(error){
           console.log(error)
       }
     },
     // 编辑权限
     async editPermission(pid){
-      // const result = await getPermissionById(pid)
+
+      await this.$refs.edit.getPermissionById(pid)
       this.showEditDialog = true
 
     }

@@ -6,11 +6,13 @@ import permission from './modules/permission'
 import bookkeeping from './modules/bookkeeping'
 import count from './modules/count'
 import personal from './modules/personal'
+import rolemanagement from './modules/rolemanagement'
 import usermanagement from './modules/usermanagement'
 Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+
 
 export const constantRoutes = [
   {
@@ -61,6 +63,7 @@ export const asyncRoutes = [
   count,
   personal,
   permission,
+  rolemanagement,
   usermanagement,
 
 ]
