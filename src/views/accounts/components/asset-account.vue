@@ -24,7 +24,7 @@
       </el-row>
       <!-- 表格 -->
       <el-table :data="list" border>
-        <el-table-column label="序号" type="index"></el-table-column>
+        <el-table-column label="序号" type="index" ></el-table-column>
         <el-table-column label="账户名称" prop="payname"></el-table-column>
         <el-table-column :formatter="formatType" label="账户类型" prop="paytypeid"></el-table-column>
         <el-table-column label="账户余额" prop="balance"></el-table-column>

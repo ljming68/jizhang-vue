@@ -199,10 +199,7 @@ $cursor: #fff;
     }
 
   }
-  .el-button{
-    // width: 100%;
-    // height: 40px;
-  }
+
 
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);

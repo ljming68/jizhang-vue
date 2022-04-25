@@ -58,6 +58,7 @@ export default {
         await assignPerm(updateData)
 
         this.$message.success('分配权限成功')
+        this.selectCheck = []
         this.$parent.showPermDialog = false
 
       }catch(error){
@@ -69,10 +70,10 @@ export default {
       this.$emit('update:showPermDialog',false)
 
     },
+    // 分配权限
     async assignPerm(roleid){
       const {rows} = await getPermissionList()
       this.permData = rows
-
       this.roleid = roleid
       const {pids} = await getRolePerm(roleid)
       console.log(pids)

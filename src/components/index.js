@@ -2,6 +2,7 @@
 import PageTools from './PageTools'
 import AccountsTitle from './AccountsTitle'
 import AddAccount from './AddAccount'
+import TimeTitle from './TimeTitle'
 
 export default{
   install(Vue){
@@ -9,5 +10,6 @@ export default{
     Vue.component('PageTools',PageTools)
     Vue.component('AccountsTitle',AccountsTitle)
     Vue.component('AddAccount',AddAccount)
+    Vue.component('TimeTitle',TimeTitle)
   }
 }

@@ -2,10 +2,10 @@
   <el-dialog title="新增用户"  :visible="showDialog" @close="btnCancel">
     <!-- 表单 -->
     <el-form ref="addUser" :model="formData" :rules="rules" label-width="120px">
-      <el-form-item label="用户名" prop="username">
+      <el-form-item label="用户名" prop="username" style="width:80%">
         <el-input v-model="formData.username"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
+      <el-form-item label="密码" prop="password" style="width:80%">
         <el-input v-model="formData.password"></el-input>
       </el-form-item>
     </el-form>
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import {validEmail} from '@/utils/validate'
+import {addUser} from '@/api/user'
 export default {
   props:{
     showDialog:{
@@ -31,20 +33,29 @@ export default {
   },
   name: '',
   data(){
+    const validateEmail = function(rule,value,callback){
+      validEmail(value) ? callback() :callback(new Error('邮箱格式不正确'))
+    }
     return{
       formData:{
         username:'',
         password:'',
       },
       rules:{
-        username:[{}],
-        password:[{}],
+        username:[{required:true,message:'邮箱地址不能为空',trigger:'blur'},
+        {required:true,trigger:'blur',validator: validateEmail}
+        ],
+        password:[{required:true,message:'密码不能为空',trigger:'blur'},
+        {min: 6, max: 16, message: '密码的长度在6-16位之间 ', trigger: 'blur'},
+        ],
       }
     }
   },
   methods:{
-    btnOK(){
+    async btnOK(){
       try{
+        await this.$refs.addUser.validate()
+        await addUser(this.formData)
         this.$message.success('添加用户成功')
         this.$parent.getUserList()
         this.$parent.showDialog = false

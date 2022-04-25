@@ -7,23 +7,26 @@
         </template>
       </page-tools>
       <!-- 表格 -->
-      <el-table border="" :data="list">
-        <el-table-column align="center" type="index" label="序号" width="120" />
-        <el-table-column align="center" prop="identity" label="角色名称" width="240" />
-        <el-table-column align="center" prop="description" label="描述" />
-        <el-table-column align="center" label="操作">
-          <template slot-scope="{row}">
-            <el-button size="small" type="success" @click="assignPerm(row.roleid)">分配权限</el-button>
-            <el-button size="small" type="primary" @click="editRole(row.roleid)">编辑</el-button>
-            <el-button size="small" type="danger" @click="deleteRole(row.roleid)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <el-card>
+        <el-table border="" :data="list">
+          <el-table-column align="center" type="index" label="序号" width="120" />
+          <el-table-column align="center" prop="identity" label="角色名称" width="240" />
+          <el-table-column align="center" prop="description" label="描述" />
+          <el-table-column align="center" label="操作">
+            <template slot-scope="{row}">
+              <el-button size="small" type="success" @click="assignPerm(row.roleid)">分配权限</el-button>
+              <el-button size="small" type="primary" @click="editRole(row.roleid)">编辑</el-button>
+              <el-button size="small" type="danger" @click="deleteRole(row.roleid)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
+
     </div>
     <!-- 添加 -->
     <add-role :showDialog.sync="showDialog"/>
     <edit-role ref="edit" :showEditDialog.sync="showEditDialog"/>
-    <assign-role ref="perm" :showPermDialog.sync="showPermDialog" />
+    <assign-perm ref="perm" :showPermDialog.sync="showPermDialog" />
   </div>
 </template>
 
@@ -31,14 +34,14 @@
 import {getRoleList,delRole} from '@/api/role'
 import AddRole from './components/add-role'
 import EditRole from './components/edit-role'
-import AssignRole from './components/assign-role'
+import assignPerm from './components/assign-permission'
 
 export default {
   name: '',
   components:{
     AddRole,
     EditRole,
-    AssignRole,
+    assignPerm,
   },
   data(){
     return{

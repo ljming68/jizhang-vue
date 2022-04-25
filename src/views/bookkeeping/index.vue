@@ -38,10 +38,7 @@ export default {
 </script>
 
 <style lang="scss" >
-  .el-tabs__item{
-    font-size: 16px ;
-    padding: 0 10px ;
-  }
+
   .bookkeeping-card{
     padding: 0 5%;
   
