@@ -19,11 +19,15 @@ import '@/permission' // permission control
 import Component from '@/components'
 Vue.use(Component) // 注册自己的插件
 
+// 将全局的echarts 对象挂在==挂载到vue 原型对象上
+// Vue.prototype.$echarts = window.echarts
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
+
+
 
 Vue.config.productionTip = false
 

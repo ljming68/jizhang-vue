@@ -2,10 +2,10 @@
   <div>
     <el-row type="flex" justify="end">
       <el-select v-model="currentYear" size="small" style="width: 120px" @change="dateChange">
-          <el-option v-for="item in yearList" :key="item" :label="item" :value="item">{{ item }}</el-option>
+        <el-option v-for="item in yearList" :key="item" :label="item" :value="item">{{ item }}</el-option>
       </el-select>
       <el-select v-model="currentMonth" size="small" style="width: 120px;margin-left:10px" @change="dateChange">
-          <el-option v-for="item in 12" :key="item" :label="item" :value="item">{{ item }}</el-option>
+        <el-option v-for="item in 12" :key="item" :label="item" :value="item">{{ item }}</el-option>
       </el-select>
     </el-row>
     <el-calendar v-model="currentDate">
@@ -15,11 +15,11 @@
           <span class="text"> {{ data.day | getDay }}</span>
           <div class="rest" v-if="data.type == 'current-month' && scheduling.length > 0">
             <!-- 遍历数据，判断当前日期的日是否与数据中的（index+1）相等，也就是说判断是否为当天排班 -->
-              <div v-for="(item, index) in scheduling[0].arrangeStatus" :key="'1' + index" class="zhi">
-                {{data.day.split('-')[2] == index+1 ? '支： ' + item : ''}}
+              <div v-for="(item, index) in scheduling" :key="'1' + index" class="zhi">
+                {{data.day.split('-')[2] == index+1 ? '支： ' + item.outmoney : ''}}
               </div>
-              <div v-for="(item, index) in scheduling[1].arrangeStatus" :key="'2' + index" class="shou" >
-                {{data.day.split('-')[2] == index+1 ? '收： ' + item : ''}}
+              <div v-for="(item, index) in scheduling" :key="'2' + index" class="shou" >
+                {{data.day.split('-')[2] == index+1 ? '收： ' + item.inmoney : ''}}
               </div>
           </div>
         </div>
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import {getDateList} from '@/api/count'
 export default {
   name: '',
   filters:{
@@ -91,7 +92,6 @@ export default {
     //  快速生成数组的方法
     this.yearList = Array.from(Array(11),(v,i) => this.currentYear + i - 5 )
     this.dateChange()
-    this.getDataList()
   },
   methods:{
     // 年月份改变之后
@@ -99,23 +99,66 @@ export default {
       const year = this.currentYear
       const month = this.currentMonth
       this.currentDate = new Date(`${year}-${month}-1`) // 以当前月的1号为起始
-      this.$message.warning('切换月份')
+      this.getDateList()
+      
     },
      // 是否是休息日
     isWeek(value) {
       return value.getDay() === 6 || value.getDay() === 0
     },
-    getDataList(){
-      this.scheduling = [{
-        staffname: "张三",
-        arrangeHalf: "上午",
-        arrangeStatus: ["111","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班"]
-        }, {
-        staffname:"张三",
-        arrangeHalf: "下午",
-        arrangeStatus: ["8888","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班"]
-        }]
+    async getDateList(){
+      // console.log('首页',this.currentYear,this.currentMonth)
+      this.$message.warning(`${this.currentYear},${this.currentMonth}`)
+      let MonthData = `${this.currentYear}-${this.currentMonth}`
+      // console.log(typeof MonthData.toString())
+      let data = {
+        date: MonthData.toString()
+      }
+      const {rows} = await getDateList(data)
+      
+      let count = this.getDays(this.currentYear,this.currentMonth)
+      console.log(rows,count)
+      // let arr1 =  new Array(count).fill(0)
+      // let arr2 =  new Array(count).fill(0)
+      // let show = [
+      //   {arrangeStatus:arr1},
+      //   {arrangeStatus:arr2}
+      // ]
+      // this.scheduling = show
+
+      let arr = Array.from(new Array(count),()=>({date:'',inmoney:0,outmoney:0}))
+      let arrs = arr.map((item,index) =>{
+        rows.forEach(i => {
+          // console.log(i.date.substr(8,10) === (index+1).toString())
+          if(parseInt(i.date.substr(8,10)) == (index+1)){
+            console.log(index,item,i)
+            item = i
+          }
+        });
+        return item
+
+      })
+
+      this.scheduling = arrs
+
+      // 将 后端传过来的数据替换掉 原数据
+
+
+
+      // const arr = rows.map()
+    //   this.scheduling = [{
+    //     arrangeStatus: ["111","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班"]
+    //     }, {
+    //     arrangeStatus: ["8888","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班","班"]
+    //     }]
+    },
+    getDays(year, month) {
+      let days = [31,28,31,30,31,30,31,31,30,31,30,31] 
+      if ( (year % 4 ===0) && (year % 100 !==0 || year % 400 ===0) ) {
+            days[1] = 29
+      }　　return days[month+1]  
     }
+
   }
 }
 </script>

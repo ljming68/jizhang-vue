@@ -12,7 +12,7 @@
       <el-option label="周" value="2"></el-option>
       <el-option label="月" value="3"></el-option>
       <!-- <el-option label="季" value="4"></el-option> -->
-      <el-option label="年" value="5"></el-option>
+      <el-option label="年" value="4"></el-option>
     </el-select>
  
     <el-date-picker
@@ -57,7 +57,7 @@
     </span> -->
  
     <el-date-picker
-      v-if="selectt === '5'"
+      v-if="selectt === '4'"
       v-model="listQuery.year"
       type="year"
       format="yyyy"
@@ -119,21 +119,16 @@ export default {
         data.time = this.getDate(new Date().getTime());
       } else if (val === "2") {
         data.num = "2";
-        data.time = this.getDate(new Date().getTime());
+        data.time = this.getWeek();
       } else if (val === "3") {
         data.num = "3";
-        data.time = this.getDate(new Date().getTime());
-      } else if (val === "4") {
+        data.time = this.getMonth();
+      }  else if (val === "4") {
         data.num = "4";
-        data.time = this.getBeforeSeason();
-        this.$nextTick(() => {
-          this.$refs["jidupicker"].reset();
-        });
-      } else if (val === "5") {
-        data.num = "5";
-        data.time = this.getBeforeYear();
+        data.time = this.getYear();
       }
       this.timereset();
+      // console.log('selectTime',data)
       this.$emit("dateTypeSelectChange", data);
     },
  
@@ -146,8 +141,10 @@ export default {
     },
     weekdayChange(val) {
       if (val) {
-        const week = this.getDate(val);
+        // console.log('selectTime-week',this.listQuery.week)
+        const week = this.getDate(val - 24 * 3600 * 1000);
         this.$emit("datetimeChange", week);
+        // console.log('selectTime-week',week)
       } else {
         this.$emit("datetimeChange", this.getDate(new Date().getTime()));
       }
@@ -188,7 +185,7 @@ export default {
       this.listQuery.day = this.getDate(
         new Date().getTime()
       );
-      this.listQuery.week = new Date(date.getTime());
+      this.listQuery.week = new Date(date.getTime() - 24 * 3600 * 1000);
       this.listQuery.month = new Date(date.getTime());
       this.listQuery.year = new Date(date.getTime());
 
@@ -203,6 +200,7 @@ export default {
     reset() {
       this.selectt = "3";
       this.timereset();
+      this.monthChange()
     },
     // 转化时间格式
     getDate(time) {
@@ -221,29 +219,51 @@ export default {
       var currentdate = year + seperator1 + month + seperator1 + strDate;
       return currentdate;
     },
-
-
-
-    // 设置时间为上个月  不用
-    getBeforeMonth() {
+    //  获取年
+    getYear() {
+      const year = new Date().getFullYear();
+      return `${year}`;
+    },
+    // 获取月
+    getMonth() {
       // 获取上个月时间  年-月-日
-      var seperator1 = "-";
-      var day = "01";
-      var date = new Date();
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      if (month === 1) {
-        year -= 1;
-        month = 12;
-      } else {
-        month -= 1;
-      }
-      if (month >= 1 && month <= 9) {
-        month = "0" + month;
-      }
-      var currentdate = year + seperator1 + month + seperator1 + day;
+      let seperator1 = "-";
+      let day = "01";
+      let date = new Date();
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      
+      let currentdate = year + seperator1 + month;
       return currentdate;
     },
+    // 获取周
+    getWeek() {
+      let time= new Date()
+      let timesStamp = time.getTime();
+      let currenDay = time.getDay();
+      let weekDates = [];
+ 
+      for (let i = 0; i < 7; i++) {
+        weekDates.push(new Date(timesStamp + 24 * 60 * 60 * 1000 * (i - (currenDay + 6) % 7)).toLocaleDateString()
+            .replace(/\//g, '-'));
+        }
+ 
+      return `${weekDates[0]}--${weekDates[6]}`
+ 
+      //自己按需求截取
+      //  this.weekFirst1 = weekDates[0].split('-')[1]
+      //  this.weekFirst2 = weekDates[0].split('-')[2]
+      //  this.weekEnd1 = weekDates[6].split('-')[1]
+      //  this.weekEnd2 = weekDates[6].split('-')[2]
+ 
+    },
+    getTime(){
+      this.monthChange()
+    },
+
+
+
+
     // 季度 不用
     getBeforeSeason() {
       // 获取上一季度
@@ -260,12 +280,7 @@ export default {
         return `${year}-07-01`;
       }
     },
-    // 去年 不用
-    getBeforeYear() {
-      // 获取上一年
-      const year = new Date().getFullYear() - 1;
-      return `${year}-01-01`;
-    },
+
     // 季度 不考虑
     seasonChange(val) {
       console.log("季");

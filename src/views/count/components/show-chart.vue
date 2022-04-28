@@ -17,17 +17,17 @@
         <span>￥1475.00</span>
       </template>
       <template slot="one">
-        <span>时间</span>
+        <span>当前时间</span>
         <span v-html="'\u2002'"></span>
-        <span>2022年第18周</span>
+        <span>{{new Date() | formatDate}}</span>
       </template>
       <template slot="two">
-        <DateTimePicker />
+        <DateTimePicker ref="dateTimePicker" @dateTypeSelectChange="dateTypeSelectChange" @datetimeChange="datetimeChange"/>
       </template>
       <template slot="check">
         <el-row class="rightbtn">
-          <el-button type="primary"> 查询</el-button>
-          <el-button type="primary"> 重置</el-button>
+          <el-button type="primary" @click="handleSelect"> 查询</el-button>
+          <el-button type="primary" @click="handleReset"> 重置</el-button>
         </el-row>
         
       </template>
@@ -42,14 +42,14 @@
             <span>收支趋势概况</span>
           </div>
           <!-- 放置折线图组件 -->
-          <!-- <WorkCalendar />
-          <component :is="'WorkCalendar'" /> -->
+          <line-chart ref="line" />
         </el-card>
         <!--  -->
         <el-card class="box-card">
           <div slot="header" class="header">
             <span>收支占比概况</span>
           </div>
+          <bing-chart ref="bing" />
         </el-card>
       </el-col>
       <!-- 右侧内容 -->
@@ -65,7 +65,7 @@
             <span>收支明细排行</span>
           </div>
         <!-- 放置雷达图 -->
-        <radar />
+        
         </el-card>
       </el-col>
     </el-row>
@@ -74,10 +74,101 @@
 
 <script>
 import DateTimePicker from './datetimepicker'
+import LineChart from './line-chart'
+import BingChart from './bing-chart'
+import {formatDate} from '@/utils/time'
 export default {
   name: '',
+  data(){
+    return{
+      typeDate:'',
+      currentDate:'',
+
+      date:'',
+      resetdate:''
+
+    }
+  },
+  filters:{
+    formatDate,
+  },
   components:{
     DateTimePicker,
+    LineChart,
+    BingChart,
+  },
+  mounted(){
+    this.getCurrentMonth()
+  },
+  methods:{
+    dateTypeSelectChange(data){
+      console.log('father',data)
+      this.typeDate = data
+    },
+    datetimeChange(data){
+      console.log('father2',data)
+      this.currentDate = data
+
+    },
+    async getCurrentMonth(){
+
+      await this.$refs.dateTimePicker.getTime()
+      // console.log(this.currentDate)
+      let date = this.currentDate.split('-')
+      date = `${date[0]}-${date[1]}`
+      this.resetdate = date
+      this.refreshChart(date)
+      this.typeDate = {num: '3', time: this.currentDate}
+      
+
+    },
+    async refreshChart(date){
+      console.log('refreshChart',date)
+      await this.$refs.line.getDate(date)
+      await this.$refs.bing.getDate(date)
+    },
+    async handleSelect(){
+      // await xx?
+      console.log('sssss',this.typeDate,this.currentDate,this.date)
+  
+      if (this.typeDate.num === "1") {
+        console.log('1111',this.date)
+        let selectDate = this.date
+        // this.refreshChart(selectDate)
+
+        
+      } else if (this.typeDate.num === "2") {
+        console.log('2222',this.date)
+        
+      } else if (this.typeDate.num == "3") {
+        console.log('3333',this.date)
+        let arr = this.date.split('-')
+        this.date = `${arr[0]}-${arr[1]}`
+      }  else if (this.typeDate.num === "4") {
+        console.log('4444',this.date)
+        let arr = this.date.split('-')
+        this.date = `${arr[0]}`
+      }
+      console.log(this.date)
+      this.refreshChart(this.date)
+      
+      
+    },
+    handleReset(){
+      this.$refs.dateTimePicker.reset()
+      // console.log('reset',this.resetdate)
+      this.refreshChart(this.resetdate)
+    },
+  },
+  watch:{
+    typeDate(newVal,oldVal){
+      console.log(newVal)
+      return this.date = `${newVal.time}`
+    },
+    currentDate(newVal,oldVal){
+      console.log(newVal)
+      return this.date = `${newVal}`
+    }
   }
 }
 </script>
