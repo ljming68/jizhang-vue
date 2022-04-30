@@ -28,7 +28,7 @@ export default {
     // 获取服务器数据
     async getData(){
       await this.getDateList()
-    //   console.log('qqqqqq',this.bingData)
+      // console.log('qqqqqq',this.bingData)
       this.updateChart()
     },
     // 更新图表

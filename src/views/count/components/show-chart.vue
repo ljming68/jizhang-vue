@@ -40,6 +40,7 @@
         <el-card class="box-card">
           <div slot="header" class="header">
             <span>收支趋势概况</span>
+            
           </div>
           <!-- 放置折线图组件 -->
           <line-chart ref="line" />
@@ -58,6 +59,7 @@
           <div slot="header" class="header">
             <span>收支类目排行</span>
           </div>
+          <category-rank ref="category"/> 
         </el-card>
         <!-- 绩效指数 -->
         <el-card class="box-card">
@@ -76,6 +78,7 @@
 import DateTimePicker from './datetimepicker'
 import LineChart from './line-chart'
 import BingChart from './bing-chart'
+import CategoryRank from './category-rank'
 import {formatDate} from '@/utils/time'
 export default {
   name: '',
@@ -96,6 +99,7 @@ export default {
     DateTimePicker,
     LineChart,
     BingChart,
+    CategoryRank,
   },
   mounted(){
     this.getCurrentMonth()
@@ -126,6 +130,7 @@ export default {
       console.log('refreshChart',date)
       await this.$refs.line.getDate(date)
       await this.$refs.bing.getDate(date)
+      await this.$refs.category.getDate(date)
     },
     async handleSelect(){
       // await xx?
@@ -133,11 +138,27 @@ export default {
   
       if (this.typeDate.num === "1") {
         console.log('1111',this.date)
-        let selectDate = this.date
+        // let selectDate = this.date
         // this.refreshChart(selectDate)
 
         
       } else if (this.typeDate.num === "2") {
+
+        let arr = this.date.split('-')
+        let days = this.getDays(parseInt(arr[0]),parseInt(arr[1]))
+        let date = ''
+        if(days - parseInt(arr[2]) + 1 < 7 ){
+
+          let left = `${arr[0]}-${arr[1]}-${arr[2]}`
+          let right = `${arr[0]}-${parseInt(arr[1]) + 1}-${7 - (days - parseInt(arr[2]) + 1)}`
+          date = `${left}--${right}`
+
+        }else{
+          let left = `${arr[0]}-${arr[1]}-${arr[2]}`
+          let right = `${arr[0]}-${arr[1]}-${parseInt(arr[2]) + 6}`
+          date = `${left}--${right}`
+        }
+        this.date = date
         console.log('2222',this.date)
         
       } else if (this.typeDate.num == "3") {
@@ -159,6 +180,13 @@ export default {
       // console.log('reset',this.resetdate)
       this.refreshChart(this.resetdate)
     },
+    // 判断 月份有多少天
+    getDays(year, month) {
+      let days = [31,28,31,30,31,30,31,31,30,31,30,31] 
+      if ( (year % 4 ===0) && (year % 100 !==0 || year % 400 ===0) ) {
+            days[1] = 29
+      }　　return days[month+1]  
+    },
   },
   watch:{
     typeDate(newVal,oldVal){
@@ -177,6 +205,7 @@ export default {
 .box-card {
   padding: 5px 10px;
   margin-top: 20px;
+  position: relative;
   .header {
     span {
       color: #2c3e50;
@@ -187,6 +216,7 @@ export default {
       float: right;
       padding: 3px 0;
     }
+    
   }
   .headTit {
     span {
