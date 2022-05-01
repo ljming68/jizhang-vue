@@ -1,33 +1,29 @@
 <template>
   <el-card class="time-title">
-      <el-row type="flex" justify="space-between" align="middle" >
+      <!-- <el-row type="flex" justify="space-between" align="middle" >
         <el-col>
           <i class="el-icon-info" />          
           <slot name="left" >
-          <!-- <span>时间</span>
-          <span>$1475.00</span> -->
+          <span>时间</span>
+          <span>$1475.00</span>
         </slot>
         </el-col>
         <el-col>
           <i class="el-icon-info" />
           <slot name="center">
-          <!-- <span>净资产</span>
-          <span>$1475.00</span> -->
+          <span>净资产</span>
+          <span>$1475.00</span>
         </slot>
         </el-col>
         <el-col>
           <i class="el-icon-info" />
           <slot name="right">
-          <!-- <span>选择日期</span>
-          <span>$1475.00</span> -->
+          <span>选择日期</span>
+          <span>$1475.00</span>
         </slot>
         </el-col>
         
-        
-        <!-- <span>净资产</span>
-        <span>$1475.00</span>
-        <span>眼睛</span> -->
-      </el-row>
+      </el-row> -->
       <el-row type="flex" justify="space-between" align="middle" class="two">
         <el-col :span="10">
           <slot name="one">
@@ -72,7 +68,7 @@ export default {
   .time-title{
     margin:  10px 0;
   }
-  .two{
-    margin-top: 20px;
-  }
+  // .two{
+  //   margin-top: 20px;
+  // }
 </style>

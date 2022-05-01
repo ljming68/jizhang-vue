@@ -4,22 +4,26 @@
     <el-option label="支出" value="1"></el-option>
     <el-option label="收入" value="2"></el-option>
   </el-select>
-  <div ref="bing" class="bing-chart" />
+  <div ref="detailrank" class="detail-rank" />
 </div>
-  
 </template>
 
 <script>
 var echarts = require("echarts");
-import {getCategoryList} from '@/api/count'
+import {getDetailList} from '@/api/count'
 export default {
   name: '',
   data(){
     return{
       chartInstance:null,
       date:'',
-      bingData:[],
       selectid:'1',
+      xDataArr1:[],
+      yDataArr1:[],
+      xDataArr2:[],
+      yDataArr2:[],
+      yCurrentData:[],
+      yCurrentData:[],
     }
   },
   created(){
@@ -28,12 +32,13 @@ export default {
     selectid(newVal,oldVal){
       if(newVal==='1'){
 
-        this.CurrentData = this.bingData
+        this. xCurrentData = this.xDataArr1
+        this. yCurrentData = this.yDataArr1
         this.updateChart()
         
       }else{
-
-        this.CurrentData = this.bingData2
+        this. xCurrentData = this.xDataArr2
+        this. yCurrentData = this.yDataArr2
         this.updateChart()
       }
     }
@@ -41,7 +46,7 @@ export default {
   methods:{
     // 初始化echartInstance 对象
     initChart(){
-      this.chartInstance = echarts.init(this.$refs.bing);
+      this.chartInstance = echarts.init(this.$refs.detailrank);
     },
     // 获取服务器数据
     async getData(){
@@ -53,14 +58,18 @@ export default {
     updateChart(){
       this.chartInstance.showLoading();
       const option = {
-        legend:{
-            data:this.CurrentData.name
+        xAxis:{
+          type:'value'
+        },
+        yAxis:{
+          type:'category',
+          data:this.xCurrentData
         },
         series:[
           {
-            data: this.CurrentData,
-            type:'pie',
-            radius:['50%','75%'],
+            type:'bar',
+            data:this.yCurrentData
+
           },
         ]
       }
@@ -81,19 +90,36 @@ export default {
       let dateData = {
         date:this.date
       }
-      const {rows1,rows2} = await getCategoryList(dateData)
-        //   console.log(rows1,rows2)
-
-      this.bingData = rows1.map(item =>{
+      const {rows1,rows2} = await getDetailList(dateData)
+          console.log(rows1,rows2)
+      // 支出
+      this.xDataArr1 = rows1.map(item =>{
+          // item.value = Math.abs(item.value)
+          return `${item.name}
+          ${item.date}`
+      }).slice(0,9)
+        function f(a,b){
+          return(a-b)
+        }
+      let yDataArr = rows1.map(item =>{
           item.value = Math.abs(item.value)
-          return item
+          return item.value
       })
-      this.bingData2 = rows2.map(item =>{
-          return item
-      })
+      this.yDataArr1 = yDataArr.sort(f).slice(0,9)
 
-      this.CurrentData = this.bingData
-      console.log('zzzzzzzzzzzz',this.CurrentData)
+      // 收入
+      this.xDataArr2 = rows2.map(item =>{
+          // item.value = Math.abs(item.value)
+          return `${item.name}
+          ${item.date}`
+      }).slice(0,9)
+      this.yDataArr2 = rows2.map(item =>{
+          item.value = Math.abs(item.value)
+          return item.value
+      }).slice(0,9)
+
+      this. xCurrentData = this.xDataArr1
+      this. yCurrentData = this.yDataArr1
 
     },
     
@@ -108,8 +134,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.bing-chart {
-    width: 580px;
+.detail-rank {
+    width: 500px;
     height: 400px;
     // background-color: pink;
 }

@@ -32,3 +32,27 @@ export function getLineList(data) {
     data,
   })
  }
+
+ 
+
+/**
+* 获取详情排行列表
+*/
+export function getDetailList(data) {
+  return request({
+    url:'/detaillist',
+    method:'post',
+    data,
+  })
+ }
+
+/**
+* 获取账单列表
+*/
+export function getBillList(data) {
+  return request({
+    url:'/billlist',
+    method:'post',
+    data,
+  })
+ }

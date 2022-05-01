@@ -121,6 +121,7 @@ export default {
       const {rows} = await getLineList(dateData)
 
       console.log('days----------------',this.date)
+      // 年 月 周 日 分别加载 不同的数据
       if(this.date.length==7 | this.date.length==6){
         // console.log('月份')
         let res = this.date.split('-')

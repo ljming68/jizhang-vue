@@ -1,7 +1,7 @@
 <template>
   <div>
     <time-title>
-      <template slot="left">
+      <!-- <template slot="left">
         <span>本周结余</span>
         <span v-html="'\u2002'"></span>
         <span>￥1475.00</span>
@@ -15,7 +15,7 @@
         <span>本周收入</span>
         <span v-html="'\u2002'"></span>
         <span>￥1475.00</span>
-      </template>
+      </template> -->
       <template slot="one">
         <span>当前时间</span>
         <span v-html="'\u2002'"></span>
@@ -65,6 +65,7 @@
         <el-card class="box-card">
           <div slot="header" class="header">
             <span>收支明细排行</span>
+            <detail-rank ref="detail"/> 
           </div>
         <!-- 放置雷达图 -->
         
@@ -79,6 +80,7 @@ import DateTimePicker from './datetimepicker'
 import LineChart from './line-chart'
 import BingChart from './bing-chart'
 import CategoryRank from './category-rank'
+import DetailRank from './detail-rank'
 import {formatDate} from '@/utils/time'
 export default {
   name: '',
@@ -100,6 +102,7 @@ export default {
     LineChart,
     BingChart,
     CategoryRank,
+    DetailRank
   },
   mounted(){
     this.getCurrentMonth()
@@ -131,6 +134,7 @@ export default {
       await this.$refs.line.getDate(date)
       await this.$refs.bing.getDate(date)
       await this.$refs.category.getDate(date)
+      await this.$refs.detail.getDate(date)
     },
     async handleSelect(){
       // await xx?
