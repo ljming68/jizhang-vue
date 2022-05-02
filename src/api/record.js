@@ -56,3 +56,30 @@ export function delRecord(id){
 
   })
 }
+
+
+
+/**
+ * 获取收支明细列表
+ */
+export function searchRecordList(data,params) {
+  return request({
+    url:'/recordlist',
+    method:'post',
+    data,
+    params
+  })
+}
+
+/** *
+ *  封装一个导入账单的接口
+ *
+ * ***/
+
+export function importRecord(data) {
+  return request({
+    url: '/records',
+    method: 'post',
+    data,
+  })
+}

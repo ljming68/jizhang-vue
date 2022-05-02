@@ -3,6 +3,7 @@ import PageTools from './PageTools'
 import AccountsTitle from './AccountsTitle'
 import AddAccount from './AddAccount'
 import TimeTitle from './TimeTitle'
+import UploadExcel from './UploadExcel'
 
 export default{
   install(Vue){
@@ -11,5 +12,6 @@ export default{
     Vue.component('AccountsTitle',AccountsTitle)
     Vue.component('AddAccount',AddAccount)
     Vue.component('TimeTitle',TimeTitle)
+    Vue.component('UploadExcel',UploadExcel)
   }
 }

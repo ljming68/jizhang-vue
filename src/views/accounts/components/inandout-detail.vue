@@ -1,29 +1,35 @@
 <template>
   <div>
-    <accounts-title>
-      <!-- <span slot="before">总资产</span> -->
-       <template slot="left">
-        <span>本月结余</span>
-        <span v-html="'\u2002'"></span>
-        <span>￥1000.00</span>
-      </template>
-      <template slot="center">
-        <span>本月支出</span>
-        <span v-html="'\u2002'"></span>
-        <span>￥100.00</span>
-      </template>
-      <template slot="right">
-        <span>本月收入</span>
-        <span v-html="'\u2002'"></span>
-        <span>￥1100.00</span>
-      </template>
-    </accounts-title>
-    <el-card>
-      <!-- 搜索 -->
-      <el-row style="height:60px">
-         <el-button icon="el-icon-search" circle></el-button>
+    <el-card class="detail-header">
+      <el-row type="flex" justify="space-between">
+        <el-col>
+          <el-button size="small" type="success" @click="$router.push('/import')">excel导入</el-button>
+          <el-button size="small" type="danger">excel导出</el-button>
+        </el-col>
+        <el-col>
+          <!-- 搜索 -->
+          <el-row>
+            <el-select v-model="selectt" size="small" style="width:130px" placeholder="选择搜索类型">
+              <!-- <el-option label="默认显示全部" value="0"></el-option> -->
+              <el-option label="记录类型" value="1"></el-option>
+              <el-option label="收支类型" value="2"></el-option>
+              <el-option label="时间" value="3"></el-option>
+              <el-option label="金额" value="4"></el-option>
+              <el-option label="备注" value="5"></el-option>
+            </el-select>
+            <el-input size="small" v-if="selectt === '1'" v-model="searchContent" class="serach" placeholder="搜索 根据记录类型"></el-input>
+            <el-input size="small" v-if="selectt === '2'" v-model="searchContent" class="serach" placeholder="请输入 支出或收入"></el-input>
+            <el-input size="small" v-if="selectt === '3'" v-model="searchContent" class="serach" placeholder="例如输入 2022-01-14 -- 2022-01-18"></el-input>
+            <el-input size="small" v-if="selectt === '4'" v-model="searchContent" class="serach" placeholder="请输入 金额"></el-input>
+            <el-input size="small" v-if="selectt === '5'" v-model="searchContent" class="serach" placeholder="搜索 根据备注"></el-input>
+            <el-button size="small" icon="el-icon-search" circle @click="handleSearch"></el-button>
+            <el-button size="small" icon="el-icon-refresh" circle @click="handleRefresh"></el-button>
+          </el-row>
+        </el-col>
       </el-row>
-      <el-table :data="list" border>
+    </el-card>
+    <el-card>
+      <el-table :data="list" border v-loading="loading">
         <el-table-column label="序号" type="index" />
         <el-table-column label="记录类型" prop='category' />
         <el-table-column label="金额" prop="amount" />
@@ -36,7 +42,7 @@
           </template>
         </el-table-column>
         <el-table-column label="备注" prop="note"/>
-        <el-table-column   label="使用账户" prop="payid" />
+        <!-- <el-table-column   label="使用账户" prop="payid" /> -->
         <el-table-column label="操作" fixed="right" width="200">
           <template slot-scope="{row}">
             <!-- <el-button type="text" size="small">查看</el-button> -->
@@ -61,7 +67,7 @@
 </template>
 
 <script>
-import {getRecordList,delRecord} from '@/api/record'
+import {getRecordList,delRecord,searchRecordList} from '@/api/record'
 import {formatDate} from '@/utils/time'
 import RecordEnum from '@/api/constant/record'
 import {getAccountById} from '@/api/account'
@@ -80,6 +86,10 @@ export default {
         total: 0
       },
       showDialog:false,
+      searchContent:'', //搜索内容
+      selectt:'',
+      loading:false,
+      getType:0,
 
 
     }
@@ -114,8 +124,14 @@ export default {
       
     },
     changePage(newPage) {
-      this.page.page = newPage;
-      this.getRecordList()
+      if(this.getType = 0){
+        this.page.page = newPage;
+        this.getRecordList()
+      }else{
+         this.page.page = newPage;
+        this.handleSearch()
+      }
+
     },
     // 格式化收支类型
     formatType(row, column, cellValue, index){
@@ -148,10 +164,101 @@ export default {
 
       }
     },
-    // 刷新账户页面
+    // 搜索相关
+    handleRefresh(){
+      this.searchContent = ''
+      this.page.page = 1
+      this.loading = true
+      this.getRecordList();
+      this.loading = false
+      this.selectt = ''
+    },
+    async handleSearch(){
+      console.log(this.selectt,this.searchContent)
+      this.loading = true
+      var data = {}
+      if (this.selectt === "1") {
+        let mark = 'category'
+        let content = this.searchContent
+        data = {
+          mark,
+          content
+        }
+      } else if (this.selectt === "2") {
+        let mark = 'type'
+        var content
+        if(this.searchContent == '支出'){
+          content = 0
+        }else if(this.searchContent == '收入'){
+          content = 1
+        }else{
+          this.$message.warning('搜索内容 请输入 支出或收入')
+        }
+        
+        data = {
+          mark,
+          content
+        }
+      } else if (this.selectt == "3") {
+        let mark = 'recordtime'
+        var content
+        let left = this.searchContent.split('--')[0]
+        let right = this.searchContent.split('--')[1]
+        console.log(left,right)
+        if(left.length != right.length){
+          this.$message.warning('搜索内容格式 如2022-01-14 -- 2022-01-18')
+        }else{
+          content = this.searchContent
+        }
+        
+        data = {
+          mark,
+          content
+        }
+      }  else if (this.selectt === "4") {
+          let mark = 'amount'
+          var content 
+          if(typeof parseInt(this.searchContent) != 'number'){
+          this.$message.warning('请输入 数字')
+
+          }else{
+            content = this.searchContent
+          }
+          data = {
+            mark,
+            content
+          }
+      }else{
+        let mark = 'note'
+          let content = this.searchContent
+          data = {
+            mark,
+            content
+          }
+      }
+      console.log(data)
+      
+      const {rows,total} = await searchRecordList(data,this.page)
+      this.getType = 1
+      console.log(rows,total)
+      this.list = rows
+      this.page.total = total
+
+      this.loading = false
+
+
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.detail-header{
+  margin-bottom: 10px;
+}
+.serach{
+  width: 300px;
+  margin-right: 10px;
+ 
+}
 </style>

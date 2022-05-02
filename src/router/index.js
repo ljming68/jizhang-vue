@@ -26,6 +26,17 @@ export const constantRoutes = [
     hidden: true
   },
 
+  // 因为是公共路由，所以放到静态路由中
+  {
+    path: '/import',
+    component:Layout,
+    hidden:true, // 隐藏在左侧菜单中
+    children:[{
+      path:'', // 二级路由path什么都不写 表示二级默认路由
+      component: ()=> import('@/views/import')
+    }]
+  },
+
 
   {
     path: '/404',

@@ -47,7 +47,7 @@ export default {
 
 <style lang="scss" scoped>
   .accounts-title{
-    margin:  10px 0;
+    margin-bottom: 10px ;
     .before{
       line-height: 34px;
       i{
