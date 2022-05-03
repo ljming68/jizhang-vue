@@ -4,7 +4,7 @@
       <el-row type="flex" justify="space-between">
         <el-col>
           <el-button size="small" type="success" @click="$router.push('/import')">excel导入</el-button>
-          <el-button size="small" type="danger">excel导出</el-button>
+          <el-button size="small" type="danger" @click="showExportDialog = true">excel导出</el-button>
         </el-col>
         <el-col>
           <!-- 搜索 -->
@@ -63,11 +63,33 @@
       </el-row>
     </el-card>
     <edit-record ref="edit" :showDialog.sync="showDialog" />
+    <el-dialog title="导出账单明细" :visible="showExportDialog" @close="btnCancel">
+      <!-- 表单 -->
+      <el-form :model="formData"  label-width="160px">
+        <el-form-item label="开始时间" style="width:100%">
+          <el-date-picker style="width:60%" v-model="formData.startDate" type="date" :picker-options="pickerStartDate" placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="结束时间" style="width:100%">
+          <el-date-picker style="width:60%" v-model="formData.endDate" type="date" :picker-options="pickerEndDate" placeholder="选择日期" size="medium">
+          </el-date-picker>
+        </el-form-item>
+      </el-form>
+      <!-- footer 插槽 -->
+      <template v-slot:footer>
+        <el-row type="flex" justify="center">
+          <el-col :span="6">
+            <el-button size="small" @click="btnCancel">取消</el-button>
+            <el-button type="primary" size="small" @click="btnOK">确定</el-button>
+          </el-col>
+        </el-row>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {getRecordList,delRecord,searchRecordList} from '@/api/record'
+import {getRecordList,delRecord,searchRecordList,getExportData} from '@/api/record'
 import {formatDate} from '@/utils/time'
 import RecordEnum from '@/api/constant/record'
 import {getAccountById} from '@/api/account'
@@ -90,7 +112,23 @@ export default {
       selectt:'',
       loading:false,
       getType:0,
-
+      showExportDialog:false,
+      formData:{
+        startDate:null,
+        endDate:null,
+      },
+      pickerStartDate:{
+         disabledDate: time => {
+          if (this.formData.endDate) {
+            return time.getTime() > this.formData.endDate
+          }
+        }
+      },
+      pickerEndDate: {
+        disabledDate: time => {
+          return time.getTime() < this.formData.startDate
+        }
+      },
 
     }
   },
@@ -247,6 +285,61 @@ export default {
       this.loading = false
 
 
+    },
+    // 导出
+    async btnOK(){
+      // 表头对应关系
+      const headers = {
+        '记录类型': 'category',
+        '金额': 'amount',
+        '收支类型': 'type',
+        '记录时间': 'recordtime',
+        '备注': 'note',
+        '使用账户名称':'payid'
+      }
+      // 懒加载
+      import('@/vendor/Export2Excel').then(async excel =>{
+        let dateData = {
+          startDate:formatDate(this.formData.startDate),
+          endDate:formatDate(this.formData.endDate)
+        }
+        const {rows} = await getExportData(dateData)
+        // console.log(rows)
+        const data = this.formatJson(headers, rows)
+        // console.log(rows,data)
+        // debugger
+        await excel.export_json_to_excel({
+          header:Object.keys(headers),
+          data,
+          filename:`账单明细`,
+          autoWidth:true,
+          bookType:'xlsx'
+        })
+        this.$message.success('账单下载任务已提交')
+        this.showExportDialog = false
+      })
+    },
+    formatJson(headers, rows){
+       // 首先遍历数组
+      // [{ username: '张三'},{},{}]  => [[’张三'],[],[]]
+     
+      return rows.map(item => {
+        return Object.keys(headers).map(key =>{
+
+          return item[headers[key]]
+        })
+      })
+
+
+      // 上面代码可以简写
+      // return rows.map(item => Object.keys(headers).map(key => item[headers[key]]))
+    },
+    btnCancel(){
+      this.formData = {
+        startDate:null,
+        endDate:null,
+      }
+      this.showExportDialog = false
     }
   }
 };

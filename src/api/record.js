@@ -83,3 +83,17 @@ export function importRecord(data) {
     data,
   })
 }
+
+
+/** *
+ *  封装一个导出账单的接口
+ *
+ * ***/
+
+export function getExportData(data) {
+  return request({
+    url: '/exportrecords',
+    method: 'post',
+    data,
+  })
+}
