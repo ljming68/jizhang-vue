@@ -135,3 +135,21 @@ export function tranListToTreeData(list,rootValue){
   })
   return arr
 }
+
+/**
+ * 
+ *  配置阿里云 oss
+ */
+
+// var OSS = require('ali-oss');
+import OSS from "ali-oss";
+export function client(){
+  var client = new OSS({
+  region: "oss-cn-beijing",
+  endpoint: "oss-cn-beijing.aliyuncs.com", //外网域名
+
+  bucket: 'jizhang-avatar',
+  })  //后端提供数据 
+  return client
+}
+

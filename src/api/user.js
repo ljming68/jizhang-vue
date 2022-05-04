@@ -95,3 +95,14 @@ export function delUser(id){
 
   })
 }
+
+/**
+* 上传用户头像
+*/
+export function imgUpload(file){
+  return request({
+    url: `/imgupload`,
+    method: 'post',
+    data:file,
+  })
+}

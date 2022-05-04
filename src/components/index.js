@@ -4,6 +4,7 @@ import AccountsTitle from './AccountsTitle'
 import AddAccount from './AddAccount'
 import TimeTitle from './TimeTitle'
 import UploadExcel from './UploadExcel'
+import ImageUpload from './ImageUpload'
 
 export default{
   install(Vue){
@@ -12,6 +13,6 @@ export default{
     Vue.component('AccountsTitle',AccountsTitle)
     Vue.component('AddAccount',AddAccount)
     Vue.component('TimeTitle',TimeTitle)
-    Vue.component('UploadExcel',UploadExcel)
+    Vue.component('ImageUpload',ImageUpload)
   }
 }
