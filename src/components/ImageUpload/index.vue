@@ -107,6 +107,21 @@ export default {
           
         })
       }
+    },
+    getAvatar(avatar){
+      console.log('11')
+      console.log(this.fileList[0])
+      let value = `https://jizhang-avatar.oss-cn-beijing.aliyuncs.com/${avatar}`
+      // {url:'http://localhost:5000/avatar/1.png'}
+      if(this.fileList[0] == undefined){
+         this.fileList.push({url:value})
+      }else{
+        this.fileList[0].url = value
+      }
+     
+      // this.fileList.push({url:value})
+      
+
     }
 
   }

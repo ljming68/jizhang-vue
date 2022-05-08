@@ -106,3 +106,37 @@ export function imgUpload(file){
     data:file,
   })
 }
+
+/**
+* 获取用户信息  个人中心
+*/
+export function getUserInfo(){
+  return request({
+    url: `/userinfo`,
+    method: 'get'
+  })
+}
+
+/**
+* 更新用户信息  个人中心
+*/
+export function updateUserInfo(data){
+  return request({
+    url: `/userinfo`,
+    method: 'put',
+    data
+  })
+}
+
+
+
+/**
+* 更新密码
+*/
+export function updatePassword(data){
+  return request({
+    url: `/userpwd`,
+    method: 'put',
+    data
+  })
+}
