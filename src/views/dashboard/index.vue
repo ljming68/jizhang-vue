@@ -5,10 +5,10 @@
         <div>
           <div class="fl headL">
             <div class="headImg">
-              <img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F02%2F2109242332225H9-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653397258&t=a79434ca8480c987c5310b124b7933b8">
+              <img :src="'https://jizhang-avatar.oss-cn-beijing.aliyuncs.com/'+avatarImg">
             </div>
             <div class="headInfoTip">
-              <p class="firstChild">早安，{{ userInfo.username }}，祝你开心每一天！</p>
+              <p class="firstChild">早安，{{ nickname }}，祝你开心每一天！</p>
               <p class="lastChild">理财是一项长久的事项，贯通人的一生</p>
             </div>
           </div>
@@ -45,15 +45,20 @@ export default {
   },
   data(){
     return{
-      userInfo:{
-        username:'大熊'
-      }
+      // userInfo:{
+      //   username:'大熊'
+      // }
     }
   },
   computed: {
     ...mapGetters([
-      'name'
-    ])
+      'name',
+      'nickname',
+
+    ]),
+    avatarImg(){
+      return this.$store.state.user.userInfo.avatar? this.$store.state.user.userInfo.avatar :'1.png'
+    }
   }
 }
 </script>

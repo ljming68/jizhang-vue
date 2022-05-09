@@ -34,7 +34,10 @@ export function getEcode(data) {
 }
 
 export function logout() {
-  
+  return request({
+    url:'/logout',
+    method:'get'
+  })
 }
 
 
@@ -107,6 +110,19 @@ export function imgUpload(file){
   })
 }
 
+
+/**
+* 获取简单用户信息  vuex
+*/
+export function getSimpleInfo(){
+  return request({
+    url: `/usersimple`,
+    method: 'get'
+  })
+}
+
+
+
 /**
 * 获取用户信息  个人中心
 */
@@ -140,3 +156,4 @@ export function updatePassword(data){
     data
   })
 }
+

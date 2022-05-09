@@ -13,6 +13,7 @@ export default{
     Vue.component('AccountsTitle',AccountsTitle)
     Vue.component('AddAccount',AddAccount)
     Vue.component('TimeTitle',TimeTitle)
+    Vue.component('UploadExcel',UploadExcel)
     Vue.component('ImageUpload',ImageUpload)
   }
 }

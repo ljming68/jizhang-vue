@@ -66,7 +66,7 @@ export default {
       }
     },
     btnCancel(){
-     
+      this.selectCheck = []
       this.$emit('update:showPermDialog',false)
 
     },

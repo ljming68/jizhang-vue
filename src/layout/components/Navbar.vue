@@ -10,8 +10,9 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
-          <img src="https://tse3-mm.cn.bing.net/th/id/OIP-C.1CyIihS--FMRpXQsydJWJQHaEo?pid=ImgDet&rs=1" class="user-avatar">
+          <img :src="'https://jizhang-avatar.oss-cn-beijing.aliyuncs.com/' + avatarImg " class="user-avatar">
+          <!-- <img src="https://tse3-mm.cn.bing.net/th/id/OIP-C.1CyIihS--FMRpXQsydJWJQHaEo?pid=ImgDet&rs=1" class="user-avatar"> -->
+          <span class="role">{{ rolename }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -42,11 +43,20 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  data(){
+    return{
+      role:'管理员'
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
-    ])
+      'rolename',
+    ]),
+    avatarImg(){
+      return this.$store.state.user.userInfo.avatar? this.$store.state.user.userInfo.avatar :'1.png'
+    }
+
   },
   methods: {
     toggleSideBar() {
@@ -137,7 +147,11 @@ export default {
       .avatar-wrapper {
         // margin-top: 5px;
         position: relative;
-
+        .role {
+          color: #fff;
+          vertical-align: middle;
+          margin-left:5px;
+        }
         .user-avatar {
           cursor: pointer;
           width: 30px;
