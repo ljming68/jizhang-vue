@@ -14,15 +14,7 @@ export default{
         icon:'userm'
       }
     },
-    {
-      path:'detail/:id?',// ? 的含义是表示该参数可传可不穿   动态路由参数
-      component:() =>import('@/views/usermanagement/detail'),
-      hidden:true,
-      meta:{
-        title:'用户详情'
-      }
 
-    },
 ]
 
 }

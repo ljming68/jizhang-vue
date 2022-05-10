@@ -59,6 +59,17 @@ export default {
     updateChart(){
       this.chartInstance.showLoading();
       const option = {
+        // 标题
+        // title: {
+        //   text:this.title + "排行榜top10",
+        // },
+        //图表位置
+        // grid: {
+        //   left: "3%",
+        //   right: "4%",
+        //   bottom: "3%",
+        //   containLabel: true,
+        // },
         xAxis:{
           type:'category',
           data: this.xDataArr,

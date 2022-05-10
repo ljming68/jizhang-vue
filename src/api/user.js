@@ -147,7 +147,7 @@ export function updateUserInfo(data){
 
 
 /**
-* 更新密码
+* 更新密码 用户
 */
 export function updatePassword(data){
   return request({
@@ -157,3 +157,13 @@ export function updatePassword(data){
   })
 }
 
+/**
+* 更新密码 管理员
+*/
+export function changePassword(data){
+  return request({
+    url: `/userpwd/${data.userid}`,
+    method: 'put',
+    data
+  })
+}

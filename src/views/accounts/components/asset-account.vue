@@ -3,19 +3,19 @@
     <accounts-title>
       <!-- <span slot="before">总资产</span> -->
       <template slot="left">
-        <span>净资产</span>
-        <span v-html="'\u2002'"></span>
-        <span>￥1475.00</span>
-      </template>
-      <template slot="center">
         <span>总资产</span>
         <span v-html="'\u2002'"></span>
-        <span>￥1475.00</span>
+        <span>￥{{totalBalance}}</span>
       </template>
-      <template slot="right">
+      <template slot="center">
         <span>负债</span>
         <span v-html="'\u2002'"></span>
-        <span>￥1475.00</span>
+        <span>￥{{oweBalance}}</span>
+      </template>
+      <template slot="right">
+        <span>净资产</span>
+        <span v-html="'\u2002'"></span>
+        <span>￥{{ActualBalance}}</span>
       </template>
     </accounts-title>
     <el-card>
@@ -30,7 +30,8 @@
         <el-table-column label="账户余额" prop="balance"></el-table-column>
         <el-table-column label="操作" fixed="right" width="220">
           <template slot-scope="{row}">
-            <!-- <el-button type="text" size="small">查看</el-button> -->
+            <!-- path: '/mtindex/detail', query:{shopid: item.id} `/recordDetail/${row.payid}`-->
+            <el-button type="text" size="small" @click="$router.push({path:'/recordDetail',query:{payid: row.payid}})">查看</el-button>
             <el-button type="text" size="small" @click="editAccount(row.payid)">编辑</el-button>
             <el-button type="text" size="small" @click="transferAccount(row.payid)">转账</el-button>
             <!-- <el-button type="text" size="small">记一笔</el-button> -->
@@ -79,6 +80,33 @@ export default {
       showEditDialog:false,
       showtransDialog:false,
       payId:null,
+      // title
+      blist:[],
+      blist2:[],
+
+    }
+  },
+  computed:{
+    totalBalance(){
+      let sum = 0
+      this.blist.map(item=>{
+        sum += item
+      })
+      return sum
+    },
+    oweBalance(){
+      let sum = 0
+      this.blist2.map(item=>{
+        sum += item
+      })
+      return sum
+    },
+    ActualBalance(){
+      let sum = 0
+      this.list.map(item=>{
+        sum += item.balance
+      })
+      return sum
     }
   },
   created(){
@@ -87,9 +115,16 @@ export default {
   methods:{
     async getaccountsList(){
       const {rows,total} = await getAccountList(this.page)
-      console.log(rows,total)
+      // console.log(rows,total)
       this.list = rows
       this.page.total = total
+      this.blist = rows.map(item=>{
+        return item.balance
+      }).filter(item => item>0)
+      this.blist2 = rows.map(item=>{
+        return item.balance
+      }).filter(item => item<0)
+      // console.log(this.blist)
       this.$emit('update:loading',false)
     },
     changePage(newPage){

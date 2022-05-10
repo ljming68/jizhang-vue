@@ -97,3 +97,15 @@ export function getExportData(data) {
     data,
   })
 }
+
+/**
+ * 根据账户和时间 查询记录列表
+ */
+export function getDetailList(data,params) {
+  return request({
+    url:'/recorddetail',
+    method:'post',
+    data,
+    params
+  })
+}

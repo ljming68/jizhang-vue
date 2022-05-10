@@ -36,7 +36,7 @@
     <el-row type="flex" justify="space-between">
       <!-- 左侧内容 -->
       <el-col :span="13" style="padding-right:26px">
-        <!--  -->
+        <!-- 收支趋势概况 -->
         <el-card class="box-card">
           <div slot="header" class="header">
             <span>收支趋势概况</span>
@@ -45,7 +45,7 @@
           <!-- 放置折线图组件 -->
           <line-chart ref="line" />
         </el-card>
-        <!--  -->
+        <!-- 收支占比概况 -->
         <el-card class="box-card">
           <div slot="header" class="header">
             <span>收支占比概况</span>
@@ -55,19 +55,20 @@
       </el-col>
       <!-- 右侧内容 -->
       <el-col :span="11">
+        <!-- 收支类目排行 -->
         <el-card class="box-card">
           <div slot="header" class="header">
             <span>收支类目排行</span>
           </div>
           <category-rank ref="category"/> 
         </el-card>
-        <!-- 绩效指数 -->
+        <!-- 收支明细排行 -->
         <el-card class="box-card">
           <div slot="header" class="header">
             <span>收支明细排行</span>
-            <detail-rank ref="detail"/> 
           </div>
-        <!-- 放置雷达图 -->
+          <detail-rank ref="detail"/> 
+
         
         </el-card>
       </el-col>

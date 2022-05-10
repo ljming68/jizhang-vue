@@ -6,13 +6,31 @@ export default{
   name:'accounts',
   component:Layout,
   // 配置二级路由
-  children:[{
-    path:'',
-    component:()=>import('@/views/accounts'),
-    meta:{
-      title:'账户管理',
-      icon:'accounts'
-    }
-  }]
+  children:[
+    {
+      path:'',
+      component:()=>import('@/views/accounts'),
+      meta:{
+        title:'账户管理',
+        icon:'accounts'
+      }
+    },
+    {
+      path: '/recordDetail',
+      component: ()=> import('@/views/recordDetail'),
+      hidden:true, // 隐藏在左侧菜单中
+      children:[
+        {
+        path:':payid?', 
+        // component: ()=> import('@/views/recordDetail')
+        },
+        {
+          path:':date?', 
+          // component: ()=> import('@/views/recordDetail')
+        },
+  
+      ]
+    },
+  ]
 
 }

@@ -108,7 +108,12 @@ export default {
         }
         await updateRecord(updateData)
         this.$message.success('更新记录成功')
-        this.$parent.getRecordList();
+        if(this.$parent.getRecordList){
+          this.$parent.getRecordList();
+        }else{
+          this.$parent.getDetailList();
+        }
+        
         this.$parent.showDialog = false
 
       }catch(error){

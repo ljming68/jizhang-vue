@@ -180,7 +180,7 @@ export default {
     // 格式化账户类型
     async formatPayid(cellValue){
       // 找 0 1 对应的值
-      console.log(cellValue)
+      // console.log(cellValue)
       // const result = await getAccountById(payid)
       // console.log(result)
       // return obj ? obj.id : '未知'
@@ -212,7 +212,7 @@ export default {
       this.selectt = ''
     },
     async handleSearch(){
-      console.log(this.selectt,this.searchContent)
+      // console.log(this.selectt,this.searchContent)
       this.loading = true
       var data = {}
       if (this.selectt === "1") {
@@ -242,7 +242,7 @@ export default {
         var content
         let left = this.searchContent.split('--')[0]
         let right = this.searchContent.split('--')[1]
-        console.log(left,right)
+        // console.log(left,right)
         if(left.length != right.length){
           this.$message.warning('搜索内容格式 如2022-01-14 -- 2022-01-18')
         }else{
@@ -274,11 +274,11 @@ export default {
             content
           }
       }
-      console.log(data)
+      // console.log(data)
       
       const {rows,total} = await searchRecordList(data,this.page)
       this.getType = 1
-      console.log(rows,total)
+      // console.log(rows,total)
       this.list = rows
       this.page.total = total
 

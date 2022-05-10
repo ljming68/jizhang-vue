@@ -15,6 +15,9 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+// 解决 non-passive警告 
+import 'default-passive-events'
+
 // 全局组件注册
 import Component from '@/components'
 Vue.use(Component) // 注册自己的插件

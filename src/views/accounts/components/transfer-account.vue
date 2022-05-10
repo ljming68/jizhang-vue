@@ -115,6 +115,7 @@ export default {
        
         await transAccount(this.formData)
         this.$message.success('账户转账成功')
+        this.getAccountList()
         this.$parent.getaccountsList()
         this.$parent.showtransDialog = false
 
@@ -140,12 +141,19 @@ export default {
       const {rows} = await getAccountList(this.page)
       // console.log('++++',this.formData.payid)
       this.accountList2 = rows.map((item, index)=>{
+        // console.log('zzzzzzzzzzzzzzzz',item)
         // if(item.payid == this.payId){
-        //   return '同账户'   payid == null ?
+        //   return 
         // }
+          const value = `${item.payname}---${this.formatType(item.paytypeid)}---${item.balance}`
+          return {'payid':item.payid,'value':value}
+        
+        
+        
 
-        const value = `${item.payname}---${this.formatType(item.paytypeid)}---${item.balance}`
-        return {'payid':item.payid,'value':value}
+        
+      }).filter(item =>{
+        return item.payid != this.payId
       })
       // console.log(this.accountList)
       
@@ -174,7 +182,7 @@ export default {
       const value = `${payname}---${typename}---${balance}`
       this.accountList = [{'payid':payid,'value':value}]
       this.formData.payid = payid
-      
+      this.getAccountList()
     }
 
   }

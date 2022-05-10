@@ -35,7 +35,7 @@
         <el-table-column align="center" prop="actualmoney" label="结余" />
         <el-table-column align="center" label="操作">
           <template slot-scope="{row}">
-            <el-button size="small" type="text" @click="look(row.monthid)">查看</el-button>
+            <el-button size="small" type="text" @click="look(row.month)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -96,6 +96,11 @@ export default {
       }
       const {rows} = await getBillList(data)
       this.list = rows
+    },
+    // 查询详情
+    look(month){
+      // console.log(month)
+      this.$router.push({path:'/recordDetail',query:{month: `${this.currentYear}-${month}`}})
     }
   }
 }

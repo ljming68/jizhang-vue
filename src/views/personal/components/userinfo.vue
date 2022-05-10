@@ -58,6 +58,7 @@
 
 <script>
 import {getUserInfo,updateUserInfo} from '@/api/user'
+import {mapActions} from 'vuex'
 export default {
   name: '',
   data(){
@@ -87,6 +88,7 @@ export default {
     this.getUserInfo()
   },
   methods:{
+    ...mapActions(['user/getSimpleInfo']),
     // 接收 头像地址
     imgUrl(value){
       this.avatar = value
@@ -110,7 +112,9 @@ export default {
       }
       // console.log(data)
       await updateUserInfo(data)
+      await this['user/getSimpleInfo']()
       this.$message.success('资料修改成功')
+      
       this.getUserInfo()
       this.isEdit = false
     },

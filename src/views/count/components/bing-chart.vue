@@ -62,7 +62,10 @@ export default {
             type:'pie',
             radius:['50%','75%'],
           },
-        ]
+        ],
+        tooltip:{
+          trigger:'item'
+        }
       }
     //   console.log(option)
       this.chartInstance.hideLoading();

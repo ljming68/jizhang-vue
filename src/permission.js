@@ -1,7 +1,7 @@
 import router from '@/router'
 import store from '@/store'
 
-const whiteList = ['/login','/404']
+const whiteList = ['/login','/404','/register']
 router.beforeEach( async(to,from,next)=>{
   if(store.getters.token){
     // 有token 去登录 跳转到 首页
